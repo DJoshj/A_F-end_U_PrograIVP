@@ -1,0 +1,164 @@
+/* general*/
+.contenido{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+/* gin general */
+
+.side-nav{
+    height: 100vh;
+    width: 20%;
+    background-color: #ffffff;
+    border-right: 1px solid #000000;
+}
+
+/* Navbar */
+
+.logo-nav {
+    height: 30% ;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top:40px;
+
+}
+
+.logo-nav img{
+    width: 120px;
+}
+
+.logo-nav h3{
+    padding-top:10px;
+    font-size: 1.5rem;
+    
+}
+
+.opciones{
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.opciones button{
+    font-size: 1.2rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 70%;
+    padding: 10px;
+    border-radius: 5px;
+    font-size:1.0rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.opciones button:nth-child(1){
+    background-color: #3454bd;
+
+    color: #ffffff;
+}
+.opciones button:nth-child(2){
+    background-color: #19495a;
+    color: #ffffff;
+}
+.opciones button:nth-child(3){
+    background-color: #19495a;
+    color: #ffffff;
+}
+.opciones button:nth-child(4){
+    background-color: #2a1c50;
+    color: #ffffff;
+}
+.opciones button:nth-child(5){
+    background-color: #2a1c50;
+    color: #ffffff;
+}
+
+.opciones button:hover{
+    transform: scale(1.05);
+    transition: all 0.3s ease-in-out;
+}
+
+/*  */
+
+/* salir */
+.salir {
+    height: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.salir button{
+    width: 50%;
+    padding: 10px;
+    font-size: 1.2rem;
+    border: none;
+    outline: solid transparent;
+    cursor: pointer;
+    border-radius: 10px;
+    background-color: #FFC611;
+    color: #ffffff;
+    transition: all 0.3s ease-in-out;
+    box-shadow:1px 1px 13px -4px #ffc400;
+    
+}   
+.salir button:hover{
+    background-color: rgba(255, 0, 0, 0.473);
+    box-shadow:1px 1px 13px -4px #ffc401ad;
+}
+
+/* Swipe Right Button Effect */
+.opciones button,
+.salir button {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.opciones button::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -105%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.541); /* light swipe highlight */
+    transform: skewX(-20deg); /* gives diagonal swipe effect */
+    transition: all 0.5s ease-in-out;
+}
+
+.opciones button:hover::before{
+    left: 200%; /* moves the highlight across the button */
+}
+
+/* Optional: keep hover scale */
+.opciones button:hover,
+.salir button:hover {
+    transform: scale(1.05);
+}
+
+
+/* Fin nav */
+
+/* main content */
+.main{
+    width: 80%;
+    height: 100vh;
+    
+}
+
+.main-nav{
+    width:100%;
+    height:120px;
+    background-color: #394b85;
+}
+
