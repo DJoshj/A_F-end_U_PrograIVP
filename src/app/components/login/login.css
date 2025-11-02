@@ -114,11 +114,11 @@ mat-divider {
 /* === RESPONSIVE DESIGN === */
 
 /* Ajuste general para laptops medianas */
-@media (max-width: 1230px) {
+@media (max-width: 1400px) {
   .login-container {
-    width: 75%;
+    width: 50%;
     height: auto;
-    margin-top: 8%;
+    margin-top: 5%;
   }
 
   .login-wrapper2 h1 {
