@@ -1,21 +1,22 @@
 .login-container {
-width:50dvw;
-height:60dvh;
+width:50%;
+height:70%;
 box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); 
 border-radius: 10px;
 margin: 0 auto;
-margin-top:15vh;
+margin-top:10%;
 box-sizing: border-box;
 display: flex;
 }
 
 .login-container .login-wrapper1 {
-    width: 45%;
-    height: 100%;
+    width: 40%;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
 }
 
 .login-container .login-wrapper2 {
-    width: 55%;
+    width: 60%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -23,7 +24,7 @@ display: flex;
 }
 
 .login-wrapper2 h1 {
- margin-top: 35%;
+ margin-top: 25%;
  font-size: 1.9rem;
 }
 .login-wrapper2 h2 {
@@ -70,6 +71,7 @@ mat-divider {
     font-size: 0.8rem;
     color: #232326;
     display: flex;
+    margin-bottom: 5%;
 }
 
 .register-link a {
@@ -103,4 +105,66 @@ mat-divider {
     color: white;
     margin-top: 20px;
     font-size: 1.5rem;
+}
+
+
+/*  */
+
+
+/* === RESPONSIVE DESIGN === */
+
+/* Ajuste general para laptops medianas */
+@media (max-width: 1230px) {
+  .login-container {
+    width: 75%;
+    height: auto;
+    margin-top: 8%;
+  }
+
+  .login-wrapper2 h1 {
+    font-size: 1.6rem;
+    margin-top: 20%;
+  }
+
+  .login-wrapper2 h2 {
+    font-size: 0.9rem;
+  }
+
+  .login-form {
+    width: 85%;
+  }
+
+  .register-link{
+    padding-bottom: 5%;
+  }
+}
+
+/* Ajuste para tablets horizontales y pantallas medianas */
+@media (max-width: 992px) {
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .login-wrapper1 {
+    width: 100% !important;
+    height: 250px;
+    object-fit: contain;
+  }
+
+  .login-wrapper1 img {
+    width: 100px;
+  }
+
+  .login-wrapper2 {
+    width: 100%;
+    padding-bottom: 30px;
+  }
+
+  .login-wrapper2 h1 {
+    margin-top: 10%;
+  }
 }

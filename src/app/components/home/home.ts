@@ -18,4 +18,10 @@ import {MatListModule} from '@angular/material/list';
 })
 export class Home {
 
+  menuClosed = false;
+
+  toggleMenu() {
+    this.menuClosed = !this.menuClosed;
+  }
+
 }

@@ -1,164 +1,279 @@
-/* general*/
-.contenido{
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: row;
-}
-/* gin general */
-
-.side-nav{
-    height: 100vh;
-    width: 20%;
-    background-color: #ffffff;
-    border-right: 1px solid #000000;
+/* General layout */
+.contenido {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  position: relative;
 }
 
-/* Navbar */
+/* Hide/Show button */
+.menu-toggle {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: #394b85;
+  color: white;
+  border: none;
+  z-index: 1001;
+  display: none; /* hidden by default on large screens */
+}
 
+/* Sidebar */
+.side-nav {
+  height: 100vh;
+  width: 20%;
+  min-width: 250px;
+  background-color: #ffffff;
+  border-right: 1px solid #000000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.4s ease;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+/* Sidebar when closed */
+.side-nav.closed {
+  width: 0;
+  min-width: 0;
+  border: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Logo */
 .logo-nav {
-    height: 30% ;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top:40px;
-
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 40px;
+  text-align: center;
 }
 
-.logo-nav img{
-    width: 120px;
+.logo-nav img {
+  width: 120px;
 }
 
-.logo-nav h3{
-    padding-top:10px;
-    font-size: 1.5rem;
-    
+.logo-nav h3 {
+  padding-top: 10px;
+  font-size: 1.5rem;
 }
 
-.opciones{
-    height: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
+.logo-nav span {
+  font-size: 0.9rem;
+  color: #333;
 }
 
-.opciones button{
-    font-size: 1.2rem;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 70%;
-    padding: 10px;
-    border-radius: 5px;
-    font-size:1.0rem;
-    transition: all 0.3s ease-in-out;
+/* Menu Options */
+.opciones {
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
 }
 
-.opciones button:nth-child(1){
-    background-color: #3454bd;
-
-    color: #ffffff;
-}
-.opciones button:nth-child(2){
-    background-color: #19495a;
-    color: #ffffff;
-}
-.opciones button:nth-child(3){
-    background-color: #19495a;
-    color: #ffffff;
-}
-.opciones button:nth-child(4){
-    background-color: #2a1c50;
-    color: #ffffff;
-}
-.opciones button:nth-child(5){
-    background-color: #2a1c50;
-    color: #ffffff;
+.opciones button {
+  font-size: 1rem;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 70%;
+  padding: 10px;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  color: white;
 }
 
-.opciones button:hover{
-    transform: scale(1.05);
-    transition: all 0.3s ease-in-out;
+.opciones button:nth-child(1) {
+  background-color: #3454bd;
+}
+.opciones button:nth-child(2),
+.opciones button:nth-child(3) {
+  background-color: #19495a;
+}
+.opciones button:nth-child(4),
+.opciones button:nth-child(5) {
+  background-color: #2a1c50;
 }
 
-/*  */
+.opciones button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -105%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.541);
+  transform: skewX(-20deg);
+  transition: all 0.5s ease-in-out;
+}
 
-/* salir */
+.opciones button:hover::before {
+  left: 200%;
+}
+
+.opciones button:hover {
+  transform: scale(1.05);
+}
+
 .salir {
-    height: 20%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  height: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.salir button{
-    width: 50%;
-    padding: 10px;
-    font-size: 1.2rem;
-    border: none;
-    outline: solid transparent;
-    cursor: pointer;
-    border-radius: 10px;
-    background-color: #FFC611;
-    color: #ffffff;
-    transition: all 0.3s ease-in-out;
-    box-shadow:1px 1px 13px -4px #ffc400;
-    
-}   
-.salir button:hover{
-    background-color: rgba(255, 0, 0, 0.473);
-    box-shadow:1px 1px 13px -4px #ffc401ad;
-}
-
-/* Swipe Right Button Effect */
-.opciones button,
 .salir button {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease-in-out;
+  width: 50%;
+  padding: 10px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 10px;
+  background-color: #ffc611;
+  color: #ffffff;
+  box-shadow: 1px 1px 13px -4px #ffc400;
+  transition: all 0.3s ease-in-out;
 }
 
-.opciones button::before{
-    content: "";
+.salir button:hover {
+  background-color: rgba(255, 0, 0, 0.473);
+  box-shadow: 1px 1px 13px -4px #ffc401ad;
+  transform: scale(1.05);
+}
+
+/* Main content */
+.main {
+  width: 80%;
+  height: 100vh;
+  transition: all 0.4s ease;
+  background: #f8f8f8;
+  overflow-y: auto;
+}
+
+.side-nav.closed + .main {
+  width: 100%;
+}
+
+/* ----------- Responsive ----------- */
+
+/* medium*/
+@media (max-width: 1150px) and (max-height: 745px) {
+  .side-nav {
+    width: 22%;
+    min-width: 220px;
+  }
+  .main {
+    width: 78%;
+  }
+
+}
+
+/* Tablets: slide-out drawer */
+@media (max-width: 900px) {
+  .side-nav {
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .main {
+    width: 100%;
+    padding-top: 70px;
+  }
+}
+
+/* ----------small ---------- */
+@media (max-width: 600px) {
+  .contenido {
+    flex-direction: column;
+  }
+
+  /* Make sidebar a top dropdown */
+  .side-nav {
     position: absolute;
     top: 0;
-    left: -105%;
+    left: 0;
     width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.541); /* light swipe highlight */
-    transform: skewX(-20deg); /* gives diagonal swipe effect */
-    transition: all 0.5s ease-in-out;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #000;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background: #ffffff;
+    overflow: hidden;
+    transition: max-height 0.4s ease-in-out;
+    max-height: 0;
+  }
+
+  /* Show when open */
+  .side-nav:not(.closed) {
+    max-height: 600px;
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .menu-toggle {
+    display: block;
+    position: fixed;
+    top: 10px;
+    left: 15px;
+    z-index: 2000;
+  }
+
+  .logo-nav {
+    flex-direction: row;
+    justify-content: center;
+    height: auto;
+    padding: 10px 0;
+  }
+
+  .logo-nav img {
+    width: 60px;
+  }
+
+  .logo-nav h3 {
+    font-size: 1rem;
+    margin-left: 10px;
+  }
+
+  .opciones {
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    padding-bottom: 10px;
+  }
+
+  .opciones button {
+    width: 90%;
+    font-size: 0.9rem;
+  }
+
+  .salir {
+    display: none;
+  }
+
+  .main {
+    width: 100%;
+    height: calc(100vh - 60px);
+    padding-top: 60px;
+  }
 }
-
-.opciones button:hover::before{
-    left: 200%; /* moves the highlight across the button */
-}
-
-/* Optional: keep hover scale */
-.opciones button:hover,
-.salir button:hover {
-    transform: scale(1.05);
-}
-
-
-/* Fin nav */
-
-/* main content */
-.main{
-    width: 80%;
-    height: 100vh;
-    
-}
-
-.main-nav{
-    width:100%;
-    height:120px;
-    background-color: #394b85;
-}
-

@@ -1,35 +1,37 @@
 <div class="contenido">
-    <nav class="side-nav">
+  <!-- Toggle Button (visible on small screens) -->
+  <button class="menu-toggle" mat-icon-button (click)="toggleMenu()">
+    <mat-icon>menu</mat-icon>
+  </button>
 
-        <!-- div de logo -->
-        <div class="logo-nav">
-            <img src="assets/logo-notext.png" alt="Login Image">
-            <h3>SmartClass Manager</h3>
-            <span>Usuario</span> <!--aqui ira el valor del usuario logeado-->
-        </div>
-        <!-- div de opciones -->
-        <div class="opciones">
+  <!-- Sidebar -->
+  <nav class="side-nav" [class.closed]="menuClosed">
+    <!-- Logo -->
+    <div class="logo-nav">
+      <img src="assets/logo-notext.png" alt="Login Image" />
+      <h3>SmartClass Manager</h3>
+      <span>Usuario</span>
+    </div>
 
-            <button routerLink="#"><mat-icon>assignment</mat-icon>Administracion</button>
-            <button routerLink="#"><mat-icon>calendar_month</mat-icon>Horarios</button>
-            <button routerLink="/home/profile"><mat-icon>analytics</mat-icon>Mi Informacion</button>
+    <!-- Menu Options -->
+    <div class="opciones">
+      <button routerLink="#"><mat-icon>assignment</mat-icon>Administracion</button>
+      <button routerLink="#"><mat-icon>calendar_month</mat-icon>Horarios</button>
+      <button routerLink="/home/profile"><mat-icon>analytics</mat-icon>Mi Informacion</button>
+      <button routerLink="/home/estudiantes">
+        <mat-icon>school</mat-icon>Estudiantes
+      </button>
+      <button routerLink="#"><mat-icon>work</mat-icon>Docentes</button>
+    </div>
 
-            <button routerLink="/home/estudiantes">
-                <mat-icon>school</mat-icon>Estudiantes
-            </button>
+    <!-- Exit -->
+    <div class="salir">
+      <button routerLink="#">Salir</button>
+    </div>
+  </nav>
 
-            <button routerLink="#"><mat-icon>work</mat-icon>Docentes</button>
-
-        </div>
-
-        <!-- div de salir -->
-
-        <div class="salir">
-            <button routerLink="#">Salir</button>
-        </div>
-
-    </nav>
-    <main class="main">
-            <router-outlet></router-outlet>
-    </main>
+  <!-- Main content -->
+  <main class="main">
+    <router-outlet></router-outlet>
+  </main>
 </div>
