@@ -1,47 +1,50 @@
-<div class="login-container">
-    <div class="login-wrapper1">
-        <div class="img">
-            <img src="assets/logo-notext.png" alt="Login Image">
+<div id="all-container" class="header finisher-header">
+
+    <div class="login-container">
+        <div class="login-wrapper1">
+            <div class="img">
+                <img src="assets/logo-notext.png" alt="Login Image">
+            </div>
+            <div>
+                <h3>SmartClass Manager</h3>
+            </div>
         </div>
-        <div>
-            <h3>SmartClass Manager</h3>
+
+        <div class="login-wrapper2">
+
+            <div class="title">
+                <h1>Iniciar sesion</h1>
+            </div>
+
+            <div class="sub-title">
+                <h2>Bienvenido al nuestro sistema administracion</h2>
+            </div>
+
+            <div class="login-form">
+                <mat-form-field appearance="outline">
+                    <mat-label>Usurario</mat-label>
+                    <input matInput formControlName="Usurario" density="-1">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Password</mat-label>
+                    <input matInput type="password" formControlName="password" density="-1">
+                </mat-form-field>
+
+                <!--acciones-->
+                <mat-card-actions class="align-end">
+                    <input type="checkbox"> <label for="">recordar</label>
+                    <button mat-raised-button>Ingresar</button>
+                </mat-card-actions>
+            </div>
+            <mat-divider></mat-divider>
+
+            <div class="register-link">
+                <span>No tienes cuenta?</span>
+                <a href="#">Resgistrate aqui</a>
+            </div>
+
         </div>
+
     </div>
-
-    <div class="login-wrapper2">
-
-        <div class="title">
-            <h1>Iniciar sesion</h1>
-        </div>
-
-        <div class="sub-title">
-            <h2>Bienvenido al nuestro sistema administracion</h2>
-        </div>
-
-        <div class="login-form">
-            <mat-form-field appearance="outline">
-                <mat-label>Usurario</mat-label>
-                <input matInput  formControlName="Usurario"  density="-1">
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-                <mat-label>Password</mat-label>
-                <input matInput type="password" formControlName="password"  density="-1">
-            </mat-form-field>
-
-                    <!--acciones-->
-        <mat-card-actions class="align-end">
-            <input type="checkbox"> <label for="">recordar</label>
-            <button mat-raised-button >Ingresar</button>
-        </mat-card-actions>
-        </div>
-        <mat-divider></mat-divider>
-
-        <div class="register-link">
-            <span>No tienes cuenta?</span>
-            <a href="#">Resgistrate aqui</a>
-        </div>
-
-    </div>
-
 </div>

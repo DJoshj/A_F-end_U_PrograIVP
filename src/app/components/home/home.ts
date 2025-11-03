@@ -11,7 +11,7 @@ import {MatListModule} from '@angular/material/list';
     RouterOutlet,
     MatIconModule,
     MatListModule,
-    RouterLinkWithHref,
+    RouterLinkWithHref
 ],
   templateUrl: './home.html',
   styleUrl: './home.css',
