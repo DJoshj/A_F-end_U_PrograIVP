@@ -20,25 +20,40 @@
                 <h2>Bienvenido al nuestro sistema administracion</h2>
             </div>
 
-            <div class="login-form">
+            <div class="login-form" [formGroup]="loginForm">
                 <mat-form-field appearance="outline">
-                    <mat-label>Usurario</mat-label>
-                    <input matInput formControlName="Usurario" density="-1">
+                    <mat-label>usuario</mat-label>
+                    <input matInput formControlName="username" density="-1">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                    <mat-label>Password</mat-label>
+                    <mat-label>Contraseña</mat-label>
+                    <!-- formControlName nos permite vincular este componete con lo definido en el html y el ts -->
                     <input matInput type="password" formControlName="password" density="-1">
                 </mat-form-field>
 
                 <!--acciones-->
                 <mat-card-actions class="align-end">
+
+                    <!--config -->
+                    <ng-template #content let-c="close" let-d="dismiss">
+                        <div class="modal-body">
+                            <p>Inicio de secion exitoso</p>
+                                <button type="button" class="btn btn-outline-secondary"
+                                (click)="c('Save click')">Continuar</button>
+                        </div>
+                    </ng-template>
+                    <!-- fin modal  config-->
+
                     <input type="checkbox"> <label for="">recordar</label>
-                    <button mat-raised-button>Ingresar</button>
+
+                    <button mat-raised-button class="" (click)="login(content)"
+                    class="btn btn-lg btn-outline-primary"
+                    >Ingresar</button>
+
                 </mat-card-actions>
             </div>
             <mat-divider></mat-divider>
-
             <div class="register-link">
                 <span>No tienes cuenta?</span>
                 <a href="#">Resgistrate aqui</a>
