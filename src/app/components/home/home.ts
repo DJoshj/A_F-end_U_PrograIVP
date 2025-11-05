@@ -3,6 +3,7 @@ import { MatButton, MatAnchor } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
 import {MatListModule} from '@angular/material/list';
+import { Auth } from '../../services/auth';
 
 
 @Component({
@@ -18,10 +19,12 @@ import {MatListModule} from '@angular/material/list';
 })
 export class Home {
 
-  menuClosed = false;
+  constructor(public authService:Auth){}
 
-  toggleMenu() {
-    this.menuClosed = !this.menuClosed;
+  //metodos
+  logout(){
+    this.authService.logout;
   }
+
 
 }

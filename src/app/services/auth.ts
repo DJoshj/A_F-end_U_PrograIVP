@@ -7,8 +7,10 @@ import { Router } from '@angular/router';
 export class Auth {
 
   public users: any = {
-    admin: { password: '1234', roles: ['ESTUDIANTE', 'ADMIN'] }
+   admin: { password: '1234', roles: ['ADMIN'] },
+    user1:{password: '1234', roles: ['ESTUDIANTE']}
   };
+
 
   public username: any;
   public isAuthenticated: boolean = false;

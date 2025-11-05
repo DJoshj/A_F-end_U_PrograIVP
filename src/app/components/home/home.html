@@ -1,16 +1,15 @@
 <div class="contenido">
-  <!-- Toggle Button (visible on small screens) -->
-  <button class="menu-toggle" mat-icon-button (click)="toggleMenu()">
-    <mat-icon>menu</mat-icon>
-  </button>
 
   <!-- Sidebar -->
-  <nav class="side-nav" [class.closed]="menuClosed">
+  <nav class="side-nav">
     <!-- Logo -->
     <div class="logo-nav">
       <img src="assets/logo-notext.png" alt="Login Image" />
       <h3>SmartClass Manager</h3>
-      <span>Usuario</span>
+
+      @if(authService.isAuthenticated){
+      <span>{{authService.username}}</span>
+      }
     </div>
 
     <!-- Menu Options -->
@@ -26,7 +25,7 @@
 
     <!-- Exit -->
     <div class="salir">
-      <button routerLink="/login">Salir</button>
+      <button (click)="logout()" >Salir</button>
     </div>
   </nav>
 
