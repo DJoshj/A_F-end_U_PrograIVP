@@ -5,7 +5,7 @@
 }
 .search{
     display: flex;
-    height:55px;
+    height:10%;
     gap: 20px;
 }
 
@@ -34,4 +34,25 @@ background-color: #FFC611;
    color: rgb(0, 0, 0);
     transform: scale(1.05);
        border:1px solid rgb(0, 0, 0);
+}
+
+
+/* tabla */
+.table{
+    height:90%;
+    border-bottom-left-radius:10px;
+    border-bottom-right-radius:10px;
+}
+
+/* responseive */
+
+@media (max-width:1500px){
+
+mat-form-field{
+    height: 15px;
+    padding-top:0;
+    margin: 0;
+    width:300px;
+}
+
 }

@@ -107,6 +107,20 @@ mat-divider {
     margin-left: 10px;
 }
 
+
+/* modal */
+
+.modal-body{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-body p{
+  margin: 0;
+}
+
 /* logo */
 
 .login-wrapper1{
@@ -134,21 +148,20 @@ mat-divider {
     font-size: 1.5rem;
 }
 
-.login-wrapper1 button{
-}
-
-
 /*  */
 
 
-/* === RESPONSIVE DESIGN === */
+/* responsive */
 
-/* Ajuste general para laptops medianas */
 @media (max-width: 1400px) {
   .login-container {
     width: 50%;
-    height: auto;
-    margin-top: 5%;
+    height:80%;
+    gap:0;
+  }
+
+  .login-form{
+    margin: 10%;
   }
 
   .login-wrapper2 h1 {
@@ -164,37 +177,7 @@ mat-divider {
     width: 85%;
   }
 
-  .register-link{
-    padding-bottom: 5%;
-  }
-}
-
-/* Ajuste para tablets horizontales y pantallas medianas */
-@media (max-width: 992px) {
-  .login-container {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    align-items: center;
-    box-sizing: border-box;
-  }
-
-  .login-wrapper1 {
-    width: 100% !important;
-    height: 250px;
-    object-fit: contain;
-  }
-
-  .login-wrapper1 img {
-    width: 100px;
-  }
-
-  .login-wrapper2 {
-    width: 100%;
-    padding-bottom: 30px;
-  }
-
-  .login-wrapper2 h1 {
-    margin-top: 10%;
+  mat-divider{
+    margin: 0;
   }
 }
