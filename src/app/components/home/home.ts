@@ -3,8 +3,6 @@ import { MatButton, MatAnchor } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
 import {MatListModule} from '@angular/material/list';
-import { Auth } from '../../services/auth';
-import { User2Auth } from '../../services/authservice/auth2';
 
 
 @Component({
@@ -20,9 +18,7 @@ import { User2Auth } from '../../services/authservice/auth2';
 })
 export class Home {
 
-  user?:User2Auth;
-
-  constructor(public authService:Auth){}
+  constructor(){}
 
   //
 
