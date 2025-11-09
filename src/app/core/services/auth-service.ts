@@ -19,8 +19,8 @@ export class AuthService {
 
   //este es el metodo que obtiene e token de login de nuestra app
 
-  login(user: string, password: string): Observable<any> {
-    return this.httpClient.post<any>(this.LOGIN_URL, { user, password }).pipe(
+  login(username: string, password: string): Observable<any> {
+    return this.httpClient.post<any>(this.LOGIN_URL, { username, password }).pipe(
       tap(response => {
         if (response.token) {
           console.log(response.token);

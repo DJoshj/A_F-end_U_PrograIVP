@@ -62,7 +62,8 @@
               "buildTarget": "ProjectoFronEnd:build:production"
             },
             "development": {
-              "buildTarget": "ProjectoFronEnd:build:development"
+              "buildTarget": "ProjectoFronEnd:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
