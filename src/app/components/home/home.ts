@@ -3,6 +3,7 @@ import { MatButton, MatAnchor } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
 import {MatListModule} from '@angular/material/list';
+import { Auth } from '../../services/auth';
 
 
 @Component({
@@ -18,7 +19,7 @@ import {MatListModule} from '@angular/material/list';
 })
 export class Home {
 
-  constructor(){}
+  constructor(private authService:Auth){}
 
   //
 

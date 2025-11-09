@@ -13,6 +13,7 @@ import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap'
 import { Auth } from '../../services/auth';
 import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth-service';
 
 @Component({
   selector: 'app-login',
@@ -37,7 +38,7 @@ export class Login implements OnInit {
   constructor(private formBuilder: FormBuilder,
     config: NgbModalConfig,
     private modalService: NgbModal,
-    private authService: Auth,
+    private authService:AuthService,
     private router: Router) {
     //modal
     config.backdrop = 'static';
@@ -58,14 +59,17 @@ export class Login implements OnInit {
   //login funciton
 
   login(content: any): void {
-    let username = this.loginForm.value.username;
-    let password = this.loginForm.value.password;
-    let auth:boolean = this.authService.login(username,password);
 
-    if(auth==true){
-    this.modalService.open(content); //alert
-    this.router.navigateByUrl('/home');
-    }
+
+    this.authService.login(this.loginForm.value.username,this.loginForm.value.password).subscribe({
+      next:()=> this.router.navigateByUrl('/home'),
+      error: (err) => console.error('login Failed',err)
+    })
+
+    // if(auth==true){
+    // this.modalService.open(content); //alert
+    // this.router.navigateByUrl('/home');
+    // }
 
   }
 
