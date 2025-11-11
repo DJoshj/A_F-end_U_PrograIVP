@@ -1,25 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { MatIconModule } from "@angular/material/icon";
-import { AuthService } from '../../../../core/services/auth-service';
+import { Component } from '@angular/core';
+import { RouterOutlet,RouterLinkWithHref, Router } from '@angular/router';
 import { Users } from '../../../../core/services/users';
-import { Router } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth-service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { NgbModule, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-mostrar-estudiantes',
+  selector: 'app-usuarios',
   imports: [
     CommonModule,
-    FormsModule, // Add FormsModule here
+    FormsModule, 
     MatIconModule,
     NgbPagination,
     NgbModule
-],
-  templateUrl: './mostrar-estudiantes.html',
-  styleUrl: './mostrar-estudiantes.css',
+  ],
+  templateUrl: './usuarios.html',
+  styleUrl: './usuarios.css',
 })
-export class MostrarEstudiantes implements OnInit {
+export class Usuarios {
 
   users: any[] = [];
   erroMSG = '';
@@ -56,7 +56,7 @@ export class MostrarEstudiantes implements OnInit {
   //paginator
 searchTerm: string = '';
 page = 1;
-pageSize = 5;
+pageSize = 10;
 
 get filteredUsers() {
   // client-side search
@@ -67,13 +67,9 @@ get filteredUsers() {
   const term = this.searchTerm.toLowerCase();
 
   return this.users.filter(u =>
-    (u.username?.toLowerCase().includes(term)) ||
-    (u.email?.toLowerCase().includes(term)) ||
-    (u.state?.toLowerCase().includes(term)) ||
-    (String(u.userId).includes(term))
+    (u.username?.toLowerCase().includes(term))
   );
 }
-
 
 
 

@@ -35,30 +35,40 @@
                 <!--acciones-->
                 <mat-card-actions class="align-end">
 
-                    <!--config -->
-                    <ng-template #content let-c="close" let-d="dismiss">
+                    <!-- Modal approvado -->
+                    <ng-template #successModal let-c="close" let-d="dismiss">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Inicio de Sesión Exitoso</h4>
+                            <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+                        </div>
                         <div class="modal-body">
-                            <p>Inicio de secion exitoso</p>
-                                <button type="button" class="btn btn-outline-secondary"
-                                (click)="c('Save click')">Continuar</button>
+                            <p>¡Bienvenido! Has iniciado sesión correctamente.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-primary" (click)="c('confirm')">Continuar</button>
                         </div>
                     </ng-template>
-                    <!-- fin modal  config-->
+                    <!-- Error Modal -->
+                    <ng-template #errorModal let-c="close" let-d="dismiss">
+                        <div class="modal-header">
+                            <h4 class="modal-title text-danger">Error de Inicio de Sesión</h4>
+                            <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>{{ errorMessage }}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" (click)="c('Close click')">Cerrar</button>
+                        </div>
+                    </ng-template>
+
+                    <!-- fin modales -->
 
                     <input type="checkbox"> <label for="">recordar</label>
 
-                    <button mat-raised-button class="" (click)="login(content)"
-                    class="btn btn-lg btn-outline-primary"
-                    >Ingresar</button>
+                    <button mat-raised-button class="btn btn-lg btn-outline-primary" (click)="login()">Ingresar</button>
 
                 </mat-card-actions>
-            </div>
-            <mat-divider></mat-divider>
-            <div class="register-link">
-                <span>No tienes cuenta?</span>
-                <a href="#">Resgistrate aqui</a>
-            </div>
-
         </div>
 
     </div>

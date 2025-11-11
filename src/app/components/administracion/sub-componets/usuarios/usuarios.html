@@ -1,10 +1,8 @@
-<div class="container mt-4">
+<div class="container-general">
 
   <!-- Search bar -->
-  <div class="row mb-3">
-    <div class="col-md-4">
-      <input type="text" class="form-control" placeholder="Search user..." [(ngModel)]="searchTerm" />
-    </div>
+  <div class="search-bar">
+      <input type="text" class="form-control" placeholder="Nombre de Usuario" [(ngModel)]="searchTerm" />
   </div>
 
   <div class="table">
@@ -13,22 +11,24 @@
     <!-- fin de error -->
 
     <!-- Table -->
-    <table class="table table-striped table-hover table-bordered">
-      <thead class="table-dark">
+    <table class="table table-hover table-borderless ">
+      <thead>
         <tr>
           <th scope="col" sortable="userId">ID</th>
-          <th scope="col" sortable="username">Usuari</th>
-          <th scope="col" sortable="state">Etado </th>
+          <th scope="col" sortable="username">Usuario</th>
+          <th scope="col" sortable="state">Estado </th>
           <th scope="col" sortable="email">Correo</th>
+          <th scope="col">Modificacion</th>
         </tr>
       </thead>
 
-      <tbody>
+      <tbody >
         <tr *ngFor="let u of filteredUsers | slice:(page-1)*pageSize : (page-1)*pageSize + pageSize">
           <td scope="row">{{ u.userId }}</td>
           <td scope="row">{{u.username}}</td>
           <td scope="row">{{ u.state }}</td>
           <td scope="row">{{ u.email }}</td>
+          <td scope="row"><button>Modificar</button></td>
         </tr>
       </tbody>
     </table>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 //angular material
 import { MatInputModule } from '@angular/material/input';
@@ -11,7 +11,6 @@ import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 //Nng Boostrap
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap'
-import { Auth } from '../../services/auth';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
 
@@ -32,13 +31,16 @@ import { AuthService } from '../../core/services/auth-service';
 })
 export class Login implements OnInit {
 
+  @ViewChild('successModal') successModal!: ElementRef;
+  @ViewChild('errorModal') errorModal!: ElementRef;
 
   public loginForm!: FormGroup;
+  public errorMessage: string = '';
 
   constructor(private formBuilder: FormBuilder,
     config: NgbModalConfig,
     private modalService: NgbModal,
-    private authService:AuthService,
+    private authService: AuthService,
     private router: Router) {
     //modal
     config.backdrop = 'static';
@@ -50,32 +52,39 @@ export class Login implements OnInit {
   ngOnInit(): void {
 
     this.loginForm = this.formBuilder.group({
-      username: this.formBuilder.control(''),
-      password: this.formBuilder.control('')
+      username: this.formBuilder.control('Kaisy'),
+      password: this.formBuilder.control('kaisy')
     });
 
   }
 
   //login funciton
 
-  login(content: any): void {
-
-
-    this.authService.login(this.loginForm.value.username,this.loginForm.value.password).subscribe({
-      next:()=> this.router.navigateByUrl('/home'),
-      error: (err) => console.error('login Failed',err)
-    })
-
-    // if(auth==true){
-    // this.modalService.open(content); //alert
-    // this.router.navigateByUrl('/home');
-    // }
-
+  login(): void {
+    this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
+      next: () => {
+        this.modalService.open(this.successModal, { centered: true }).result.then(
+          (result) => {
+            if (result === 'confirm') {
+              this.router.navigateByUrl('/home');
+            }
+          },
+          (reason) => {
+            // Handle modal dismiss if needed
+          }
+        );
+      },
+      error: (err) => {
+        console.error('Login Failed', err);
+        this.errorMessage = err.error?.message || 'Credenciales invalidas. Por favor, intente de nuevo.';
+        this.modalService.open(this.errorModal, { centered: true });
+      }
+    });
   }
 
   //fin login funtion
 
+  //log out funtion
 
-  //back end ogin
 
 }

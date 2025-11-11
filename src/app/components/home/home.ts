@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatButton, MatAnchor } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
-import {MatListModule} from '@angular/material/list';
-import { Auth } from '../../services/auth';
+import { MatListModule } from '@angular/material/list';
+import { AuthService } from '../../core/services/auth-service';
 
 
 @Component({
@@ -13,20 +13,22 @@ import { Auth } from '../../services/auth';
     MatIconModule,
     MatListModule,
     RouterLinkWithHref
-],
+  ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class Home {
+export class Home implements OnInit {
 
-  constructor(private authService:Auth){}
+  username: string | null = null;
 
-  //
+  constructor(private authService: AuthService) { }
 
-  //metodos
-  logout(){
-    this.authService.logout;
+  ngOnInit(): void {
+    this.username = this.authService.getUsername();
   }
 
-
+  //metodos
+  logout(): void {
+    this.authService.logout();
+  }
 }
