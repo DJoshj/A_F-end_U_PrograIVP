@@ -5,19 +5,6 @@
   flex-direction: row;
   position: relative;
 }
-
-/* Hide/Show button */
-.menu-toggle {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  background: #394b85;
-  color: white;
-  border: none;
-  z-index: 1001;
-  display: none; /* hidden by default on large screens */
-}
-
 /* Sidebar */
 .side-nav {
   height: 100%;
@@ -76,7 +63,6 @@
 }
 
 .opciones button {
-  font-size: 1rem;
   outline: none;
   border: none;
   cursor: pointer;
@@ -91,39 +77,63 @@
   position: relative;
   overflow: hidden;
   color: white;
+  font-size: 1rem;
+  background-color: #0F2366; /* Default background */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.20);
 }
 
-.opciones button:nth-child(1) {
-  background-color: #3454bd;
-}
-.opciones button:nth-child(2),
-.opciones button:nth-child(3) {
-  background-color: #19495a;
-}
-.opciones button:nth-child(4),
-.opciones button:nth-child(5) {
-  background-color: #2a1c50;
+.opciones button span {
+  position: relative; 
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
-.opciones button::before {
+.opciones button:after {
   content: "";
   position: absolute;
+  left: 0;
   top: 0;
-  left: -105%;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.541);
-  transform: skewX(-20deg);
-  transition: all 0.5s ease-in-out;
+  height: 500%;
+  width: 150%;
+  background: #78c7d2; /* Default hover background */
+  -webkit-transition: all .5s ease-in-out;
+  transition: all .5s ease-in-out;
+  -webkit-transform: translateX(-98%) translateY(-25%) rotate(45deg);
+  transform: translateX(-98%) translateY(-25%) rotate(45deg);
 }
 
-.opciones button:hover::before {
-  left: 200%;
+.opciones button:hover:after,
+.opciones button.active:after { /* Apply active state */
+  -webkit-transform: translateX(-9%) translateY(-25%) rotate(45deg);
+  transform: translateX(-9%) translateY(-25%) rotate(45deg);
 }
 
-.opciones button:hover {
-  transform: scale(1.05);
+.opciones button.active {
+  transform: scale(1.09); /* Maintain scale for active state */
 }
+
+/* Specific background colors for buttons */
+.opciones button:nth-child(1):after {
+  background: #3454bd;
+}
+.opciones button:nth-child(2):after {
+  background: #225f75;
+}
+.opciones button:nth-child(3):after {
+    background: #225f75;
+}
+.opciones button:nth-child(4):after {
+      
+    background: #483286;
+
+}
+.opciones button:nth-child(5):after {
+    background: #483286;
+}
+
 
 .salir {
   height: 20%;
@@ -165,133 +175,27 @@
 
 /* ----------- Responsive ----------- */
 
-/* medium*/
-@media (max-width: 1400px) and (max-height: 745px) {
-.logo-nav img {
-  width: 80px;
-}
-
-.logo-nav h3 {
-  padding-top: 10px;
-  font-size: 1.5rem;
-}
-
-.logo-nav span {
-  font-size: 0.9rem;
-  color: #333;
-}
-
-.opciones {
-  height: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-}
-
-.opciones button{
-  padding: 10px;
-  border-radius: 15px;
-}
-
-}
-
-/* Tablets: slide-out drawer */
-@media (max-width: 900px) {
+/* Responsive for screens <= 1500px */
+@media (max-width: 1500px) {
   .side-nav {
-    width: 250px;
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-  }
-
-  .menu-toggle {
-    display: block;
+    width: 25%; /* Adjust sidebar width */
   }
 
   .main {
-    width: 100%;
-    padding-top: 70px;
-  }
-}
-
-/* ----------small ---------- */
-@media (max-width: 600px) {
-  .contenido {
-    flex-direction: column;
-  }
-
-  /* Make sidebar a top dropdown */
-  .side-nav {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid #000;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    background: #ffffff;
-    overflow: hidden;
-    transition: max-height 0.4s ease-in-out;
-    max-height: 0;
-  }
-
-  /* Show when open */
-  .side-nav:not(.closed) {
-    max-height: 600px;
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .menu-toggle {
-    display: block;
-    position: fixed;
-    top: 10px;
-    left: 15px;
-    z-index: 2000;
-  }
-
-  .logo-nav {
-    flex-direction: row;
-    justify-content: center;
-    height: auto;
-    padding: 10px 0;
+    width: 75%; /* Adjust main content width */
   }
 
   .logo-nav img {
-    width: 60px;
+    width: 100px; /* Slightly smaller logo */
   }
 
   .logo-nav h3 {
-    font-size: 1rem;
-    margin-left: 10px;
-  }
-
-  .opciones {
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    padding-bottom: 10px;
+    font-size: 1.3rem; /* Slightly smaller title */
   }
 
   .opciones button {
-    width: 90%;
-    font-size: 0.9rem;
-  }
-
-  .salir {
-    display: none;
-  }
-
-  .main {
-    width: 100%;
-    height: calc(100vh - 60px);
-    padding-top: 60px;
+    width: 80%; /* Adjust button width */
+    padding: 8px; /* Adjust padding */
+    font-size: 0.9rem; /* Adjust font size */
   }
 }

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { MatIconModule } from "@angular/material/icon";
 import { AuthService } from '../../../../core/services/auth-service';
-import { Users } from '../../../../core/services/users';
 import { Router } from '@angular/router';
 import { NgbModule, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
@@ -13,7 +12,6 @@ import { NgbModule, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
     CommonModule,
     FormsModule, // Add FormsModule here
     MatIconModule,
-    NgbPagination,
     NgbModule
 ],
   templateUrl: './mostrar-estudiantes.html',
@@ -21,58 +19,16 @@ import { NgbModule, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 })
 export class MostrarEstudiantes implements OnInit {
 
-  users: any[] = [];
-  erroMSG = '';
 
-  constructor(private userService: Users, private authService: AuthService, private router: Router) { }
+  constructor( private authService: AuthService, private router: Router) { }
 
-
-  loadUsers(): void {
-    this.userService.getUsers().subscribe({
-      next: (data) => {
-        this.users = data;
-      },
-      error: (err) => {
-        if (err.status == 401 || err.status === 403) {
-          this.authService.logout();
-        } else {
-          this.erroMSG = 'No se pudieron obtener los usuarios';
-        }
-      }
-    })
-
-  }
 
 
   ngOnInit(): void {
-    if (!this.authService.isAuthenticated()) {
-      this.authService.logout();   // limpia y redirige
-      return;
-    }
-    this.loadUsers();
+
   }
 
 
-  //paginator
-searchTerm: string = '';
-page = 1;
-pageSize = 5;
-
-get filteredUsers() {
-  // client-side search
-  if (!this.searchTerm) {
-    return this.users;
-  }
-
-  const term = this.searchTerm.toLowerCase();
-
-  return this.users.filter(u =>
-    (u.username?.toLowerCase().includes(term)) ||
-    (u.email?.toLowerCase().includes(term)) ||
-    (u.state?.toLowerCase().includes(term)) ||
-    (String(u.userId).includes(term))
-  );
-}
 
 
 

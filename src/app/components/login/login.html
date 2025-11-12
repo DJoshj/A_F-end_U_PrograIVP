@@ -35,34 +35,7 @@
                 <!--acciones-->
                 <mat-card-actions class="align-end">
 
-                    <!-- Modal approvado -->
-                    <ng-template #successModal let-c="close" let-d="dismiss">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Inicio de Sesión Exitoso</h4>
-                            <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>¡Bienvenido! Has iniciado sesión correctamente.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-primary" (click)="c('confirm')">Continuar</button>
-                        </div>
-                    </ng-template>
-                    <!-- Error Modal -->
-                    <ng-template #errorModal let-c="close" let-d="dismiss">
-                        <div class="modal-header">
-                            <h4 class="modal-title text-danger">Error de Inicio de Sesión</h4>
-                            <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>{{ errorMessage }}</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" (click)="c('Close click')">Cerrar</button>
-                        </div>
-                    </ng-template>
-
-                    <!-- fin modales -->
+                    <!-- Modals are now separate components -->
 
                     <input type="checkbox"> <label for="">recordar</label>
 

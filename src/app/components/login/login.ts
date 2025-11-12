@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 //angular material
 import { MatInputModule } from '@angular/material/input';
@@ -13,6 +13,8 @@ import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap'
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
+import { SuccessModal } from '../modals/success-modal/success-modal';
+import { ErrorModal } from '../modals/error-modal/error-modal';
 
 @Component({
   selector: 'app-login',
@@ -23,16 +25,13 @@ import { AuthService } from '../../core/services/auth-service';
     MatIconModule,
     MatFormFieldModule,
     MatDividerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   templateUrl: './login.html',
   styleUrl: './login.css',
-  providers: [NgbModal, NgbModalConfig]
+  providers: [NgbModal, NgbModalConfig,SuccessModal,ErrorModal]
 })
 export class Login implements OnInit {
-
-  @ViewChild('successModal') successModal!: ElementRef;
-  @ViewChild('errorModal') errorModal!: ElementRef;
 
   public loginForm!: FormGroup;
   public errorMessage: string = '';
@@ -63,7 +62,7 @@ export class Login implements OnInit {
   login(): void {
     this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
       next: () => {
-        this.modalService.open(this.successModal, { centered: true }).result.then(
+        this.modalService.open(SuccessModal, { centered: true }).result.then(
           (result) => {
             if (result === 'confirm') {
               this.router.navigateByUrl('/home');
@@ -77,7 +76,8 @@ export class Login implements OnInit {
       error: (err) => {
         console.error('Login Failed', err);
         this.errorMessage = err.error?.message || 'Credenciales invalidas. Por favor, intente de nuevo.';
-        this.modalService.open(this.errorModal, { centered: true });
+        const modalRef = this.modalService.open(ErrorModal, { centered: true });
+        modalRef.componentInstance.errorMessage = this.errorMessage;
       }
     });
   }

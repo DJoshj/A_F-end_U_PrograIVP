@@ -1,13 +1,16 @@
 <div class="container-general">
 
   <!-- Search bar -->
-  <div class="search-bar">
-      <input type="text" class="form-control" placeholder="Nombre de Usuario" [(ngModel)]="searchTerm" />
+  <div class="nav-bar">
+    <input type="text" class="" placeholder="Nombre de Usuario" [(ngModel)]="searchTerm" />
+    <button (click)="open()">Crear Usuario</button>
   </div>
 
   <div class="table">
     <!-- mensaje de error -->
-    <div *ngIf="erroMSG" class="error-message">{{ erroMSG }}</div>
+    @if (erroMSG) {
+    <div class="error-message">{{ erroMSG }}</div>
+    }
     <!-- fin de error -->
 
     <!-- Table -->
@@ -17,28 +20,48 @@
           <th scope="col" sortable="userId">ID</th>
           <th scope="col" sortable="username">Usuario</th>
           <th scope="col" sortable="state">Estado </th>
+          <th scope="col" sortable="state">Rol </th>
           <th scope="col" sortable="email">Correo</th>
           <th scope="col">Modificacion</th>
         </tr>
       </thead>
 
-      <tbody >
+      <tbody>
         <tr *ngFor="let u of filteredUsers | slice:(page-1)*pageSize : (page-1)*pageSize + pageSize">
           <td scope="row">{{ u.userId }}</td>
           <td scope="row">{{u.username}}</td>
           <td scope="row">{{ u.state }}</td>
+          <td scope="row">{{ u.roles.name }}</td>
           <td scope="row">{{ u.email }}</td>
-          <td scope="row"><button>Modificar</button></td>
+          <td scope="row"><button (click)="UsuarioInfo(u)">Modificar</button></td>
         </tr>
       </tbody>
     </table>
 
     <!-- Pagination -->
     <div class="d-flex justify-content-center mt-3">
-      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="filteredUsers.length"
-        [rotate]="true" [ellipses]="true">
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="filteredUsers.length" [rotate]="true"
+        [ellipses]="true">
       </ngb-pagination>
     </div>
   </div>
-  <div *ngIf="!erroMSG && users.length === 0">No hay estudiantes para mostrar.</div>
+
+
+  <!-- cargar -->
+  @if (isLoading && !erroMSG) {
+    <div class="wrapper">
+      <div class="circle"></div>
+      <div class="circle"></div>
+      <div class="circle"></div>
+      <div class="shadow"></div>
+      <div class="shadow"></div>
+      <div class="shadow"></div>
+      <span>Cargando</span>
+    </div>
+  } @else if (!isLoading && users.length === 0 && !erroMSG) {
+    <div>No hay usuarios para mostrar.</div>
+  }
+
+  <!-- Modals are now separate components -->
+
 </div>
