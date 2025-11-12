@@ -35,30 +35,13 @@
                 <!--acciones-->
                 <mat-card-actions class="align-end">
 
-                    <!--config -->
-                    <ng-template #content let-c="close" let-d="dismiss">
-                        <div class="modal-body">
-                            <p>Inicio de secion exitoso</p>
-                                <button type="button" class="btn btn-outline-secondary"
-                                (click)="c('Save click')">Continuar</button>
-                        </div>
-                    </ng-template>
-                    <!-- fin modal  config-->
+                    <!-- Modals are now separate components -->
 
                     <input type="checkbox"> <label for="">recordar</label>
 
-                    <button mat-raised-button class="" (click)="login(content)"
-                    class="btn btn-lg btn-outline-primary"
-                    >Ingresar</button>
+                    <button mat-raised-button class="btn btn-lg btn-outline-primary" (click)="login()">Ingresar</button>
 
                 </mat-card-actions>
-            </div>
-            <mat-divider></mat-divider>
-            <div class="register-link">
-                <span>No tienes cuenta?</span>
-                <a href="#">Resgistrate aqui</a>
-            </div>
-
         </div>
 
     </div>

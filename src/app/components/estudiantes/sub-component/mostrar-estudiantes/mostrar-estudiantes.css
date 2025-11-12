@@ -1,24 +1,14 @@
-*{
+* {
     margin: 0;
     padding: 0;
-    display: block;
-}
-.search{
-    display: flex;
-    height:10%;
-    gap: 20px;
-}
-
-mat-form-field{
-    height: 20px;
-    width:300px;
 }
 
 .search button{
    outline: none;
    border: none;
-   height:100%;
    width:55px;
+   height:80%;
+   margin: auto 0;
    display: flex;
    justify-content: center;
    align-items: center;
@@ -28,14 +18,6 @@ mat-form-field{
    color: rgba(0, 0, 0, 0.486) ;
    border-radius: 30px;
 }
-
-.search button:hover{
-background-color: #FFC611;
-   color: rgb(0, 0, 0);
-    transform: scale(1.05);
-       border:1px solid rgb(0, 0, 0);
-}
-
 
 /* tabla */
 .table{
