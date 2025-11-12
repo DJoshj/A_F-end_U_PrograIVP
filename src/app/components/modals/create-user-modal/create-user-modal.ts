@@ -19,9 +19,9 @@ import { UsersService } from '../../../../app/core/services/users'; // Corrected
 export class CreateUserModal implements OnInit {
   createUserForm!: FormGroup;
   userTypes = [
-    { id: 1, name: 'Admin' },
-    { id: 2, name: 'Teacher' },
-    { id: 3, name: 'Student' }
+    { id: 1, name: 'administrador' },
+    { id: 2, name: 'Maestro' },
+    { id: 3, name: 'Estudiante' }
   ];
 
   constructor(
