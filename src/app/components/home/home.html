@@ -11,7 +11,7 @@
 
     <!-- Menu Options -->
     <div class="opciones">
-      <button routerLink="/home/administracion" [class.active]="isRouteActive('/home/administracion')"><span><mat-icon>assignment</mat-icon>Administracion</span></button>
+      <button *ngIf="showAdminButton" routerLink="/home/administracion" [class.active]="isRouteActive('/home/administracion')"><span><mat-icon>assignment</mat-icon>Administracion</span></button>
       <button routerLink="#" [class.active]="isRouteActive('/home/horarios')"><span><mat-icon>calendar_month</mat-icon>Horarios</span></button>
       <button routerLink="/home/profile" [class.active]="isRouteActive('/home/profile')"><span><mat-icon>analytics</mat-icon>Mi Informacion</span></button>
       <button routerLink="/home/estudiantes" [class.active]="isRouteActive('/home/estudiantes')">

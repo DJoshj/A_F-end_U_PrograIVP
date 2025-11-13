@@ -2,8 +2,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth-service';
 import { environment } from '../../../environments/environment.development';
-import { Observable, Subject } from 'rxjs'; // Import Subject
-import { Usuarios } from '../../components/administracion/sub-componets/usuarios/usuarios'; // Keep if still used elsewhere, otherwise remove
+import { Observable, Subject, of } from 'rxjs'; // Import Subject and of
+import { map, catchError, tap } from 'rxjs/operators'; // Import map, catchError, and tap
+import { User } from '../models/user.model'; // Import User model
 
 @Injectable({
   providedIn: 'root',
@@ -25,25 +26,35 @@ export class UsersService {
     }
 
 
-    //obtener usuario por ID
-    public getUserByID(id: number):Observable<Array<Usuarios>>{
+    // Obtener usuario por ID
+    public getUserByID(id: number):Observable<User | null>{ // Cambiado a User | null
       const token = this.authService.getToken();
       const headers = new HttpHeaders({
         Authorization: `Bearer ${token}`
       });
-      return this.httpclient.get<Array<Usuarios>>(`${environment.GetUserByIdUrl}${id}`,{headers});
+      return this.httpclient.get<User>(`${environment.GetUserByIdUrl}${id}`,{headers}).pipe(
+        catchError(error => {
+          console.error('Error al obtener usuario por ID:', error);
+          return of(null);
+        })
+      );
     }
 
-    //obtener usuario por username
-    public getUserByUsername(username: string):Observable<Array<Usuarios>>{
+    // Obtener usuario por nombre de usuario
+    public getUserByUsername(username: string):Observable<User | null>{ // Cambiado a User | null
       const token = this.authService.getToken();
       const headers = new HttpHeaders({
         Authorization: `Bearer ${token}`
       });
-      return this.httpclient.get<Array<Usuarios>>(`${environment.GetUserByUsernameUrl}${username}`,{headers});
+      return this.httpclient.get<User>(`${environment.GetUserByUsernameUrl}${username}`,{headers}).pipe(
+        catchError(error => {
+          console.error('Error al obtener usuario por nombre de usuario:', error);
+          return of(null); // Retorna null para un solo usuario
+        })
+      );
     }
 
-    // Create user
+    // Crear usuario
     public createUser(userData: any, rolId: number): Observable<any> {
       const token = this.authService.getToken();
       const headers = new HttpHeaders({
@@ -53,8 +64,34 @@ export class UsersService {
       return this.httpclient.post<any>(`${environment.createUserUrl}/${rolId}`, userData, { headers });
     }
 
-    // Method to notify subscribers that users data has changed
+    // Método para notificar a los suscriptores que los datos de usuarios han cambiado
     notifyUsersChanged() {
       this._usersChanged.next();
+    }
+
+    /**
+     * Recupera el rol del usuario actual obteniendo sus datos completos del backend.
+     * @returns Un Observable del ID de rol del usuario (número) o null si no se encuentra/error.
+     */
+    public getCurrentUserRole(): Observable<number | null> {
+      const username = this.authService.getUsername();
+      if (username) {
+        return this.getUserByUsername(username).pipe(
+          map(user => { // Cambiado de 'users' a 'user'
+            if (user) {
+              const userRole = user.roles;
+              if (userRole && userRole.rolId) { // Asegurarse de que rolId existe
+                return userRole.rolId;
+              }
+            }
+            return null;
+          }),
+          catchError(error => {
+            console.error('Error al obtener el rol del usuario:', error);
+            return of(null);
+          })
+        );
+      }
+      return of(null);
     }
 }

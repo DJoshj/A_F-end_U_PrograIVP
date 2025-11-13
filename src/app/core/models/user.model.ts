@@ -5,4 +5,8 @@ export interface User {
     state: string;
     creationDate: string;
     updateDate: string;
+    roles?: {
+      rolId: number;
+      name: string;
+    };
 }

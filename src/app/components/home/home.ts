@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common'; // Import CommonModule
 import { MatIconModule } from '@angular/material/icon';
 import { RouterOutlet, RouterLinkWithHref, Router, NavigationEnd } from '@angular/router'; // Import Router and NavigationEnd
 import { MatListModule } from '@angular/material/list';
 import { AuthService } from '../../core/services/auth-service';
+import { UsersService } from '../../core/services/users'; // Import UsersService
 import { AuthGuardGuard } from '../../guards/auth-guard-guard';
 import { Observable, filter } from 'rxjs'; // Import filter
 import { AuthorizationGuard } from '../../guards/authorizationGuard';
@@ -11,6 +13,7 @@ import { AuthorizationGuard } from '../../guards/authorizationGuard';
 @Component({
   selector: 'app-home',
   imports: [
+    CommonModule, // Add CommonModule here
     RouterOutlet,
     MatIconModule,
     MatListModule,
@@ -23,14 +26,18 @@ export class Home implements OnInit {
 
   username: string | null = null;
   isAdmin$!: Observable<boolean>;
-  activeRoute: string = ''; // To store the currently active route
+  activeRoute: string = ''; // Guarda la ruta activa
+  showAdminButton: boolean = false; // Para controlar la visibilidad de los botones (solo admin está disponible)
 
-  constructor(private authService: AuthService, private authorizationGuard: AuthorizationGuard, private router: Router) { } // Inject Router
+  constructor(private authService: AuthService, private usersService: UsersService, private authorizationGuard: AuthorizationGuard, private router: Router) { } // Inyecta UsersService y Router
 
   ngOnInit(): void {
     this.username = this.authService.getUsername();
+    this.usersService.getCurrentUserRole().subscribe(userRole => {
+      this.showAdminButton = userRole === 1; // Solo funciona para admin
+    });
 
-    // Subscribe to router events to update activeRoute
+    // Se suscribe a los eventos del router para actualizar la ruta activa
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
@@ -43,7 +50,7 @@ export class Home implements OnInit {
     this.authService.logout();
   }
 
-  // Method to check if a route is active
+  // mira si la ruta esta activa
   isRouteActive(route: string): boolean {
     return this.activeRoute.includes(route);
   }
