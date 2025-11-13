@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 
 //angular material
 import { MatInputModule } from '@angular/material/input';
@@ -85,6 +85,14 @@ export class Login implements OnInit {
   //fin login funtion
 
   //log out funtion
+
+  //password hide or show
+    hide = signal(true);
+  clickEvent(event: MouseEvent) {
+    this.hide.set(!this.hide());
+    event.stopPropagation();
+  }
+
 
 
 }

@@ -26,10 +26,17 @@
                     <input matInput formControlName="username" density="-1">
                 </mat-form-field>
 
-                <mat-form-field appearance="outline">
+                <mat-form-field  class="password" appearance="outline">
                     <mat-label>Contraseña</mat-label>
                     <!-- formControlName nos permite vincular este componete con lo definido en el html y el ts -->
-                    <input  matInput type="password" formControlName="password" density="-1">
+                    <input matInput [type]="hide() ? 'password' : 'text'" formControlName="password" density="-1">
+
+                    <button matIconButton matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide()"
+                        style="background:none; color: black; margin: 0; padding:0;margin-right: 20px;"
+                        >
+                        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
                 </mat-form-field>
 
                 <!--acciones-->
@@ -42,7 +49,7 @@
                     <button mat-raised-button class="btn btn-lg btn-outline-primary" (click)="login()">Ingresar</button>
 
                 </mat-card-actions>
-        </div>
+            </div>
 
+        </div>
     </div>
-</div>
