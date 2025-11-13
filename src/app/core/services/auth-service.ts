@@ -23,32 +23,32 @@ export class AuthService {
     return this.httpClient.post<any>(environment.loginURl, { username, password }).pipe(
       tap(response => {
         if (response.token) {
-          console.log('token tomado correctamente');
           this.setToken(response.token)
         }
       })
     )
   }
 
-  //esete metodo nos permite alamacenar e token
+  // Este método nos permite almacenar el token
   private setToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
   }
 
-  //aqui recuperamos el token
+  // Aquí recuperamos el token
   public getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
 
-  //aqui obtenemos el nombre de usuario del token
+  // Aquí obtenemos el nombre de usuario del token
   public getUsername(): string | null {
     const token = this.getToken();
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        return payload.sub || null; // 'sub' is the standard claim for the subject (username)
+        const username = payload.sub || null; // 'sub' es el claim estándar para el sujeto (nombre de usuario)
+        return username;
       } catch (e) {
-        console.error('Error decoding token:', e);
+        console.error('Error decodificando el token:', e);
         return null;
       }
     }
@@ -56,9 +56,9 @@ export class AuthService {
   }
 
 
-  //validamos tiempo de expiracion y si existe en el ocal storage
+  // Validamos tiempo de expiración y si existe en el almacenamiento local
   isAuthenticated(): boolean {
-    const token = this.getToken(); //recuperamos token
+    const token = this.getToken(); // recuperamos token
     if (!token) { return false; }
 
     const payload = JSON.parse(atob(token.split('.')[1]));

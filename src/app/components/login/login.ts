@@ -51,8 +51,8 @@ export class Login implements OnInit {
   ngOnInit(): void {
 
     this.loginForm = this.formBuilder.group({
-      username: this.formBuilder.control('Kaisy'),
-      password: this.formBuilder.control('kaisy')
+      username: this.formBuilder.control('Alfonso'),
+      password: this.formBuilder.control('admin')
     });
 
   }
