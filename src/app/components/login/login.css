@@ -107,7 +107,12 @@ mat-divider {
     margin-left: 10px;
 }
 
+/* show button */
 
+.password button{
+  background-color: white !important;
+}
+/*  show button */
 /* modal */
 
 .modal-body{
