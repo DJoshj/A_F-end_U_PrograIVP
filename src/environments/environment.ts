@@ -6,9 +6,16 @@ export const environment = {
     UserUrl:'http://localhost:8080/api/v1/user',
     GetUserByIdUrl:'http://localhost:8080/api/v1/user/search/id/',
     GetUserByUsernameUrl:'http://localhost:8080/api/v1/user/search/username/',
-    createUserUrl: 'http://localhost:8080/api/v1/user/create'
+    createUserUrl: 'http://localhost:8080/api/v1/user/create',
 
 
     //estudiantes
+
+    //horarios
+    getAllSchedulesUrl:'http://localhost:8080/api/v1/schedules/all',
+
+
+    //materias
+    getAllSubjetsURl:'http://localhost:8080/api/v1/subject-assignments/all'
 
 };

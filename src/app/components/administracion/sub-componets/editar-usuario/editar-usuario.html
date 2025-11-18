@@ -5,17 +5,17 @@
 
   <div *ngIf="user">
     <form>
-      <div class="mb-3">
+      <div class="">
         <label for="userId" class="form-label">ID de Usuario:</label>
-        <input type="text" class="form-control" id="userId" [ngModel]="user.userId" name="userId" readonly>
+        <input type="text" class="" id="userId" [ngModel]="user.userId" name="userId" readonly>
       </div>
-      <div class="mb-3">
+      <div class="">
         <label for="username" class="form-label">Nombre de Usuario:</label>
-        <input type="text" class="form-control" id="username" [ngModel]="user.username" name="username" readonly>
+        <input type="text" class="" id="username" [ngModel]="user.username" name="username">
       </div>
-      <div class="mb-3">
+      <div class="">
         <label for="email" class="form-label">Correo Electrónico:</label>
-        <input type="email" class="form-control" id="email" [ngModel]="user.email" name="email" readonly>
+        <input type="email" class="" id="email" [ngModel]="user.email" name="email">
       </div>
       <!-- Add more fields as needed for editing -->
       <button type="submit" class="btn btn-primary" disabled>Guardar Cambios</button>

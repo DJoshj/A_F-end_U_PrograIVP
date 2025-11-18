@@ -8,6 +8,7 @@ import { Administracion } from './components/administracion/administracion';
 import { Usuarios } from './components/administracion/sub-componets/usuarios/usuarios';
 import { AuthGuardGuard } from './guards/auth-guard-guard';
 import { EditarUsuario } from './components/administracion/sub-componets/editar-usuario/editar-usuario';
+import { Subjects } from './components/administracion/sub-componets/subjects/subjects';
 
 export const routes: Routes = [
     { path: 'login', component: Login },
@@ -20,9 +21,10 @@ export const routes: Routes = [
             {
                 path: 'administracion', component: Administracion,
                     children: [
-                        { path: 'usuarios', component: Usuarios }, { path: 'editaUsuario/:username', component: EditarUsuario }
+                        { path: 'usuarios', component: Usuarios }, { path: 'editaUsuario/:username', component: EditarUsuario },
+                        {path:'subjects',component:Subjects}
                     ]
-            }
+            },
         ]
 
     },

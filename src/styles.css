@@ -1,8 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
+/* Puedes añadir estilos globales a este archivo, y también importar otros archivos de estilo */
 
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* Evita barras de desplazamiento globales */
+}
+body { font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-/* modales styles*/
+/* Estilos de modales */
 .modal-header {
   background-color: #0F2366;
   color: white;

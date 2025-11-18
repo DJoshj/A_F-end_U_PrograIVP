@@ -1,0 +1,83 @@
+<div class="container-general">
+
+  <!-- Search bar -->
+  <div class="nav-bar">
+    <input type="text" class="" placeholder="Materia" [(ngModel)]="searchTerm"/>
+  </div>
+
+  <div class="table-container">
+    <!-- mensaje de error -->
+    @if (erroMSG) {
+    <div class="error-message">{{ erroMSG }}</div>
+    }
+    <!-- fin de error -->
+
+    <!-- Table -->
+    <table class="table table-hover table-borderless ">
+      <thead>
+        <tr>
+          <th scope="col" sortable="subjectName">Materia</th>
+          <th scope="col" sortable="teacherName">Docente asinado</th> <!--mostrara docente ID tabien-->
+          <th scope="col" sortable="periodName">Periodo</th>
+          <th scope="col" sortable="scheduleDays">Dia</th>
+          <th scope="col" sortable="scheduleTime">Hora</th>
+          <th scope="col" sortable="classroomName">Aula</th>
+          <th scope="col" sortable="building">Edificio</th>
+          <th scope="col" sortable="section">Seccion</th>
+          <th scope="col" sortable="availableSpace">Disponibilidaad</th>
+          <th scope="col" sortable="maximumCapacity">Capacidad</th>
+          <th scope="col" sortable="enrolledStudents">Estudiantes</th>
+          
+          
+
+          <th scope="col">Modificacion</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let s of filteredSubsjects | slice:(page-1)*pageSize : (page-1)*pageSize + pageSize">
+          <td>{{ s.subjectName }}</td>
+          <td>{{ s.teacherName }}</td>
+          <td>{{ s.periodName }}</td>
+          <td>{{ s.scheduleDays }}</td>
+          <td>{{ s.scheduleTime }}</td>
+          <td>{{ s.classroomName }}</td>
+          <td>{{ s.building }}</td>
+          <td>{{ s.section }}</td>
+          <td>{{ s.availableSpace }}</td>
+          <td>{{ s.maximumCapacity }}</td>
+          <td>{{ s.enrolledStudents }}</td>
+          <td>
+            <!-- Add modification buttons here if needed -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center mt-3">
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="filteredSubsjects.length" [rotate]="true"
+        [ellipses]="true">
+      </ngb-pagination>
+    </div>
+  </div>
+
+
+  <!-- cargar -->
+  @if (isLoading && !erroMSG) {
+    <div class="wrapper">
+      <div class="circle"></div>
+      <div class="circle"></div>
+      <div class="circle"></div>
+      <div class="shadow"></div>
+      <div class="shadow"></div>
+      <div class="shadow"></div>
+      <span>Cargando</span>
+    </div>
+  } @else if (!isLoading && subjects.length === 0 && !erroMSG) {
+    <div>No hay usuarios para mostrar.</div>
+  }
+
+  <!-- Modals are now separate components -->
+
+</div>

@@ -1,33 +1,45 @@
-<div class="contenido">
+<mat-drawer-container class="" autosize hasBackdrop="false">
+  <mat-drawer #drawer class="side-nav" mode="side">
 
-  <!-- Sidebar -->
-  <nav class="side-nav">
-    <!-- Logo -->
+    <!-- Logo de la barra lateral -->
     <div class="logo-nav">
-      <img src="assets/logo-notext.png" alt="Login Image" />
+      <img src="assets/logo-notext.png" alt="Imagen de inicio de sesión" />
       <h3>SmartClass Manager</h3>
-<span>{{username}}</span>
+      <span>{{username}}</span>
     </div>
 
-    <!-- Menu Options -->
+    <!-- Opciones del menú -->
     <div class="opciones">
-      <button *ngIf="showAdminButton" routerLink="/home/administracion" [class.active]="isRouteActive('/home/administracion')"><span><mat-icon>assignment</mat-icon>Administracion</span></button>
-      <button routerLink="#" [class.active]="isRouteActive('/home/horarios')"><span><mat-icon>calendar_month</mat-icon>Horarios</span></button>
-      <button routerLink="/home/profile" [class.active]="isRouteActive('/home/profile')"><span><mat-icon>analytics</mat-icon>Mi Informacion</span></button>
-      <button routerLink="/home/estudiantes" [class.active]="isRouteActive('/home/estudiantes')">
-        <span><mat-icon>school</mat-icon>Estudiantes</span>
-      </button>
-      <button routerLink="#" [class.active]="isRouteActive('/home/docentes')"><span><mat-icon>work</mat-icon>Docentes</span></button>
+
+      @if (showAdminButton) {
+      <button routerLink="/home/administracion"[class.active]="isRouteActive('/home/administracion')"><span><mat-icon>assignment</mat-icon>Administracion</span></button>
+      }
+        @if (showAdminButton) {
+      <button routerLink="/home/profile"[class.active]="isRouteActive('/home/profile')"><span><mat-icon>analytics</mat-icon>Mi Informacion</span></button>
+      }
+
+      <button routerLink="/home/estudiantes" [class.active]="isRouteActive('/home/estudiantes')"><span><mat-icon>school</mat-icon>Estudiantes</span></button>
+      <button routerLink="#"[class.active]="isRouteActive('/home/docentes')"><span><mat-icon>work</mat-icon>Docentes</span></button>
     </div>
 
-    <!-- Exit -->
+    <!-- Botón de salir -->
     <div class="salir">
-      <button (click)="logout()" >Salir</button>
+      <button (click)="logout()">Salir</button>
     </div>
-  </nav>
 
-  <!-- Main content -->
-  <main class="main">
-    <router-outlet></router-outlet>
-  </main>
-</div>
+  </mat-drawer>
+
+  <!-- Botón para abrir/cerrar menú -->
+  <div class="menuButton">
+    <button type="" (click)="drawer.toggle()">
+      <mat-icon aria-label="Icono de menú" fontIcon="menu"></mat-icon>
+    </button>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="content-area">
+    <main class="main">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</mat-drawer-container>
