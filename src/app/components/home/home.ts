@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterOutlet, RouterLinkWithHref, Router, NavigationEnd } from '@angular/router';
@@ -9,9 +9,7 @@ import { AuthGuardGuard } from '../../guards/auth-guard-guard';
 import { Observable, filter } from 'rxjs';
 import { AuthorizationGuard } from '../../guards/authorizationGuard';
 
-import { MatDrawer } from '@angular/material/sidenav';
 import {MatButtonModule} from '@angular/material/button';
-import {MatSidenavModule} from '@angular/material/sidenav';
 
 
 @Component({
@@ -22,14 +20,12 @@ import {MatSidenavModule} from '@angular/material/sidenav';
     MatIconModule,
     MatListModule,
     RouterLinkWithHref,
-    MatSidenavModule,
      MatButtonModule
   ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
-  @ViewChild('drawer') drawer!: MatDrawer; // Referencia al componente MatDrawer
 
   showFiller = false;
   username: string | null = null;
@@ -51,11 +47,6 @@ export class Home implements OnInit {
     ).subscribe((event: NavigationEnd) => {
       this.activeRoute = event.urlAfterRedirects;
     });
-
-    // Abre el menú lateral por defecto al iniciar
-    setTimeout(() => {
-      this.drawer.open();
-    }, 0);
   }
 
   // Cierra la sesión del usuario

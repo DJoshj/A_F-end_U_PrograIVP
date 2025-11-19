@@ -1,5 +1,6 @@
 export const environment = {
     production: false,
+    apiUrl: 'http://localhost:8080/api/v1', // Base URL for the API
     loginURl: 'http://localhost:8080/api/v1/login',
 
     //users
@@ -14,8 +15,9 @@ export const environment = {
     //horarios
     getAllSchedulesUrl:'http://localhost:8080/api/v1/schedules/all',
 
-
     //materias
-    getAllSubjetsURl:'http://localhost:8080/api/v1/subject-assignments/all'
+    getAllSubjetsURl:'http://localhost:8080/api/v1/subject-assignments/all',
 
+    //teachers
+    getAllTeachersUrl:'http://localhost:8080/api/v1/teacher/all'
 };

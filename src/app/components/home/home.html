@@ -1,5 +1,5 @@
-<mat-drawer-container class="" autosize hasBackdrop="false">
-  <mat-drawer #drawer class="side-nav" mode="side">
+<div class="all-content">
+  <div class="side-nav">
 
     <!-- Logo de la barra lateral -->
     <div class="logo-nav">
@@ -27,13 +27,6 @@
       <button (click)="logout()">Salir</button>
     </div>
 
-  </mat-drawer>
-
-  <!-- Botón para abrir/cerrar menú -->
-  <div class="menuButton">
-    <button type="" (click)="drawer.toggle()">
-      <mat-icon aria-label="Icono de menú" fontIcon="menu"></mat-icon>
-    </button>
   </div>
 
   <!-- Contenido principal -->
@@ -42,4 +35,4 @@
       <router-outlet></router-outlet>
     </main>
   </div>
-</mat-drawer-container>
+</div>

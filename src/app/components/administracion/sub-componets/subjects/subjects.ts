@@ -58,7 +58,7 @@ export class Subjects implements OnInit, OnDestroy {
     }
   }
 
-  //load Horaios
+  //load subjects
 
   loadSubjects(): void {
     this.isLoading = true;
@@ -84,15 +84,11 @@ export class Subjects implements OnInit, OnDestroy {
   //fin load Horaios
 
 
-  // //listar subjects independiente -- para buscador (working)
-  // subjetsInfo(subject: any) {
-  //   this.router.navigate(['/home/administracion/editaUsuario', subject.username]);
-  // }
+  editSubject(subjectAssignedId: number) {
+    this.router.navigate(['/home/administracion/editarSubject', subjectAssignedId]);
+  }
 
-
-
-
-    //paginator
+  //paginator
 searchTerm: string = '';
 page = 1;
 pageSize = 10;

@@ -1,14 +1,7 @@
-mat-drawer-container {
-  width: 100dvw;
-  height: 100dvh; 
-}
-
-/* Estilo para el área de contenido gestionada por mat-drawer-container */
-.mat-drawer-content {
-  height: 100%;
-  width: 100dvh;
+.all-content {
   display: flex;
-  flex-direction: column;
+  width: 100dvw;
+  height: 100dvh;
 }
 
 /* Contenido principal */
@@ -19,31 +12,17 @@ mat-drawer-container {
   width: 100%; 
 }
 
+/* Área de contenido principal */
 .content-area {
   flex-grow: 1; /* Permite que el área de contenido ocupe el espacio restante */
   display: flex;
   flex-direction: column; 
-  height: 100dvh;
   position: relative; 
-}
-
-.menuButton {
-  position: absolute; 
-  top: 10px;
-  left: 10px;
-  z-index: 100; 
-  padding: 0; 
-}
-
-.menuButton button {
-  display: flex;
-  outline: none;
-  background: none;
-  border: none;
 }
 
 /* Barra lateral */
 .side-nav {
+  width: 15%; /* Default width for side-nav */
   height: 100%;
   background-color: #ffffff;
   border-right: 1px solid #000000;
@@ -195,7 +174,7 @@ mat-drawer-container {
 .main {
   flex-grow: 1; /* Permite que el contenido principal ocupe el espacio vertical restante */
   background: #f8f8f8;
-  overflow-y: hidden;
+  overflow-y: auto; /* Changed to auto to allow scrolling if content overflows */
 }
 
 /* ----------- Adaptable ----------- */
@@ -204,10 +183,6 @@ mat-drawer-container {
 @media (max-width: 1500px) {
   .side-nav {
     width: 25%; /* Ajusta el ancho de la barra lateral */
-  }
-
-  .main {
-    width: 75%; /* Ajusta el ancho del contenido principal */
   }
 
   .logo-nav img {

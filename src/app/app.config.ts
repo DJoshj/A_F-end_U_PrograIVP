@@ -5,7 +5,12 @@ import { routes } from './app.routes';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { AuthGuardGuard } from './guards/auth-guard-guard';
 import { AuthorizationGuard } from './guards/authorizationGuard';
-import { UsersService } from './core/services/users'; // Import UsersService
+import { UsersService } from './core/services/users';
+import { TeacherService } from './core/services/teacher-service';
+import { ScheduleService } from './core/services/schedule-service';
+import { ClassroomService } from './core/services/classroom-service';
+import { PeriodService } from './core/services/period-service';
+import { SubjectService } from './core/services/subject-service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +20,11 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     AuthGuardGuard,
     AuthorizationGuard,
-    UsersService // Add UsersService to providers
+    UsersService,
+    TeacherService,
+    ScheduleService,
+    ClassroomService,
+    PeriodService,
+    SubjectService
   ]
 };

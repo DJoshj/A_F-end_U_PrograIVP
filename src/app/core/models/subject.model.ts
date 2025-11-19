@@ -19,3 +19,13 @@ export interface SubjectModel {
   maximumCapacity: number;
   enrolledStudents: number;
 }
+
+export interface SubjectAssignedDTO {
+  subjectId: number;
+  teacherId: number;
+  periodId: number;
+  scheduleId: number;
+  classroomId: number;
+  maximumCapacity: number;
+  section: string;
+}
