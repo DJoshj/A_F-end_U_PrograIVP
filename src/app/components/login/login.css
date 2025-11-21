@@ -25,7 +25,7 @@
 
 .login-container {
 width:50%;
-height:70%;
+height:60%;
 box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); 
 border-radius: 10px;
 margin: 0 auto;
@@ -51,7 +51,7 @@ backdrop-filter: blur(20px);
 }
 
 .login-wrapper2 h1 {
- margin-top: 25%;
+ margin-top: 35%;
  font-size: 1.9rem;
 }
 .login-wrapper2 h2 {
@@ -109,8 +109,8 @@ mat-divider {
 
 /* show button */
 
-.password button{
-  background-color: white !important;
+.password[_ngcontent-ng-c4145618514] button[_ngcontent-ng-c4145618514] {
+    background-color: #63636300 !important;
 }
 /*  show button */
 /* modal */

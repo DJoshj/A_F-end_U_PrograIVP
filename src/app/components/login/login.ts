@@ -51,14 +51,18 @@ export class Login implements OnInit {
   ngOnInit(): void {
 
     this.loginForm = this.formBuilder.group({
-      username: this.formBuilder.control('Alfonso'),
-      password: this.formBuilder.control('admin')
+      username: this.formBuilder.control('Admin'),
+      password: this.formBuilder.control('admin1234')
     });
 
   }
 
   //login funciton
 
+  /**
+   * Maneja el proceso de inicio de sesión.
+   * Temporalmente desactiva el modal de éxito para ir directamente a la página de inicio.
+   */
   login(): void {
     this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
       next: () => {
@@ -69,15 +73,15 @@ export class Login implements OnInit {
             }
           },
           (reason) => {
-            // Handle modal dismiss if needed
+            // Manejar el cierre del modal si es necesario
           }
         );
       },
       error: (err) => {
-        console.error('Login Failed', err);
-        this.errorMessage = err.error?.message || 'Credenciales invalidas. Por favor, intente de nuevo.';
-        const modalRef = this.modalService.open(ErrorModal, { centered: true });
-        modalRef.componentInstance.errorMessage = this.errorMessage;
+        console.error('Fallo de inicio de sesión', err); // Registrar el error en consola
+        this.errorMessage = err.error?.message || 'Credenciales inválidas. Por favor, intente de nuevo.'; // Mensaje de error
+        const modalRef = this.modalService.open(ErrorModal, { centered: true }); // Abrir modal de error
+        modalRef.componentInstance.errorMessage = this.errorMessage; // Pasar mensaje de error al modal
       }
     });
   }

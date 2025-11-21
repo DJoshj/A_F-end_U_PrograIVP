@@ -1,31 +1,41 @@
-.contenido {
-  width: 100vw;
-  height: 100vh;
+.all-content {
   display: flex;
-  flex-direction: row;
-  position: relative;
+  width: 100dvw;
+  height: 100dvh;
 }
-/* Sidebar */
+
+/* Contenido principal */
+.main {
+  flex-grow: 1; /* Permite que el contenido principal ocupe el espacio vertical restante */
+  background: #f8f8f8;
+  overflow-y: auto;
+  width: 100%; 
+}
+
+/* Área de contenido principal */
+.content-area {
+  flex-grow: 1; /* Permite que el área de contenido ocupe el espacio restante */
+  display: flex;
+  flex-direction: column; 
+  position: relative; 
+}
+
+/* Barra lateral */
 .side-nav {
+  width: 15%; /* Default width for side-nav */
   height: 100%;
-  width: 20%;
   background-color: #ffffff;
   border-right: 1px solid #000000;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: all 0.4s ease;
   overflow: hidden;
   z-index: 1000;
+  border-radius: 0;
 }
 
-/* Sidebar when closed */
-.side-nav.closed {
-  width: 0;
-  min-width: 0;
-  border: none;
-  opacity: 0;
-  pointer-events: none;
+.mat-icon{
+  color: white;
 }
 
 /* Logo */
@@ -52,7 +62,7 @@
   color: #333;
 }
 
-/* Menu Options */
+/* Opciones del menú */
 .opciones {
   height: 50%;
   display: flex;
@@ -61,7 +71,7 @@
   justify-content: center;
   gap: 30px;
 }
-  
+
 .opciones button {
   outline: none;
   border: none;
@@ -78,7 +88,7 @@
   overflow: hidden;
   color: white;
   font-size: 1rem;
-  background-color: #0F2366; /* Default background */
+  background-color: #0F2366; /* Fondo predeterminado */
   box-shadow: 0 5px 15px rgba(0,0,0,0.20);
 }
 
@@ -98,7 +108,7 @@
   top: 0;
   height: 500%;
   width: 150%;
-  background: #78c7d2; /* Default hover background */
+  background: #78c7d2; /* Fondo predeterminado al pasar el ratón */
   -webkit-transition: all .5s ease-in-out;
   transition: all .5s ease-in-out;
   -webkit-transform: translateX(-98%) translateY(-25%) rotate(45deg);
@@ -106,16 +116,16 @@
 }
 
 .opciones button:hover:after,
-.opciones button.active:after { /* Apply active state */
+.opciones button.active:after { /* Aplica estado activo */
   -webkit-transform: translateX(-9%) translateY(-25%) rotate(45deg);
   transform: translateX(-9%) translateY(-25%) rotate(45deg);
 }
 
 .opciones button.active {
-  transform: scale(1.09); /* Maintain scale for active state */
+  transform: scale(1.09); /* Mantiene la escala para el estado activo */
 }
 
-/* Specific background colors for buttons */
+/* Colores de fondo específicos para los botones */
 .opciones button:nth-child(1):after {
   background: #3454bd;
 }
@@ -160,42 +170,32 @@
   transform: scale(1.05);
 }
 
-/* Main content */
+/* Contenido principal */
 .main {
-  width: 80%;
-  height: 100vh;
-  transition: all 0.4s ease;
+  flex-grow: 1; /* Permite que el contenido principal ocupe el espacio vertical restante */
   background: #f8f8f8;
-  overflow-y: auto;
+  overflow-y: auto; /* Changed to auto to allow scrolling if content overflows */
 }
 
-.side-nav.closed + .main {
-  width: 100%;
-}
+/* ----------- Adaptable ----------- */
 
-/* ----------- Responsive ----------- */
-
-/* Responsive for screens <= 1500px */
+/* Adaptable para pantallas <= 1500px */
 @media (max-width: 1500px) {
   .side-nav {
-    width: 25%; /* Adjust sidebar width */
-  }
-
-  .main {
-    width: 75%; /* Adjust main content width */
+    width: 25%; /* Ajusta el ancho de la barra lateral */
   }
 
   .logo-nav img {
-    width: 100px; /* Slightly smaller logo */
+    width: 100px; /* Logo ligeramente más pequeño */
   }
 
   .logo-nav h3 {
-    font-size: 1.3rem; /* Slightly smaller title */
+    font-size: 1.3rem; /* Título ligeramente más pequeño */
   }
 
   .opciones button {
-    width: 80%; /* Adjust button width */
-    padding: 8px; /* Adjust padding */
-    font-size: 0.9rem; /* Adjust font size */
+    width: 80%; /* Ajusta el ancho del botón */
+    padding: 8px; /* Ajusta el relleno */
+    font-size: 0.9rem; /* Ajusta el tamaño de la fuente */
   }
 }
