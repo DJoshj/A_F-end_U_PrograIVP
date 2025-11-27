@@ -10,7 +10,7 @@ import { TeacherService } from './core/services/teacher-service';
 import { ScheduleService } from './core/services/schedule-service';
 import { ClassroomService } from './core/services/classroom-service';
 import { PeriodService } from './core/services/period-service';
-import { SubjectService } from './core/services/subject-service';
+import { AssigenedSubjectService } from './core/services/Assignedsubject-service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,6 +25,6 @@ export const appConfig: ApplicationConfig = {
     ScheduleService,
     ClassroomService,
     PeriodService,
-    SubjectService
+    AssigenedSubjectService
   ]
 };

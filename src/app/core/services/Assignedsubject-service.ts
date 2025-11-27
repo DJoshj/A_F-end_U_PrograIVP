@@ -8,7 +8,7 @@ import { SubjectAssignedDTO } from '../models/subject.model'; // Importar Subjec
 @Injectable({
   providedIn: 'root',
 })
-export class SubjectService {
+export class AssigenedSubjectService {
   private apiUrl = `${environment.apiUrl}/subject-assignments`; // Nueva URL base para materias asignadas
 
   private _subjectsChanged = new Subject<void>(); // Create a Subject

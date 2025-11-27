@@ -15,8 +15,11 @@ export const environment = {
 
     //horarios
     getAllSchedulesUrl:'http://localhost:8080/api/v1/schedules/all',
-
+    
     //materias
+    getAllSubjectUrl: 'http://localhost:8080/api/v1/subjects/all',
+
+    //materias asignadas
     getAllAssignedSubjetsURl:'http://localhost:8080/api/v1/subject-assignments/all',
 
     //teachers

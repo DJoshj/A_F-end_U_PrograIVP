@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SubjectService } from '../../../../core/services/subject-service';
+import { AssigenedSubjectService } from '../../../../core/services/Assignedsubject-service';
 import { SubjectAssignedDTO } from '../../../../core/models/subject.model';
 import { TeacherService } from '../../../../core/services/teacher-service';
 import { ScheduleService } from '../../../../core/services/schedule-service';
@@ -40,7 +40,7 @@ export class AsignarSubject implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
-    private subjectService: SubjectService,
+    private assigenedSubjectService: AssigenedSubjectService,
     private teacherService: TeacherService,
     private scheduleService: ScheduleService,
     private classroomService: ClassroomService,
@@ -89,7 +89,7 @@ export class AsignarSubject implements OnInit {
    */
   loadSubjectAssigned(id: number): void {
     this.isLoading = true; // Indicar que se está cargando
-    this.subjectService.getSubjectAssignedById(id).subscribe({
+    this.assigenedSubjectService.getSubjectAssignedById(id).subscribe({
       next: (data: any) => {
         // Rellenar el formulario con los datos obtenidos
         console.log(data);
@@ -149,7 +149,7 @@ export class AsignarSubject implements OnInit {
    * Carga todas las asignaciones de materias existentes para realizar validaciones.
    */
   loadAllSubjectAssignments(): void {
-    this.subjectService.getAllsubjects().subscribe({
+    this.assigenedSubjectService.getAllsubjects().subscribe({
       next: (data: any) => {
         this.allSubjectAssignments = data;
         this.filterSchedules(); // Volver a filtrar horarios después de cargar todas las asignaciones
@@ -234,7 +234,7 @@ export class AsignarSubject implements OnInit {
         section: formValues.section,
       };
 
-      this.subjectService.updateSubjectAssigned(this.subjectAssignedId, updatedSubject).subscribe({
+      this.assigenedSubjectService.updateSubjectAssigned(this.subjectAssignedId, updatedSubject).subscribe({
         next: () => {
           this.router.navigate(['/home/administracion/assigned-subjects']); // Navegar de vuelta a la lista de materias
         },
