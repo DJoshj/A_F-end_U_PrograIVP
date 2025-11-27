@@ -8,6 +8,7 @@ export const environment = {
     GetUserByIdUrl:'http://localhost:8080/api/v1/user/search/id/',
     GetUserByUsernameUrl:'http://localhost:8080/api/v1/user/search/username/',
     createUserUrl: 'http://localhost:8080/api/v1/user/create',
+    DeleteUserUrl: 'http://localhost:8080/api/v1/user/delete',
 
 
     //estudiantes
@@ -15,8 +16,8 @@ export const environment = {
     //horarios
     getAllSchedulesUrl:'http://localhost:8080/api/v1/schedules/all',
 
-        //materias
-    getAllSubjetsURl:'http://localhost:8080/api/v1/subject-assignments/all',
+    //materias
+    getAllAssignedSubjetsURl:'http://localhost:8080/api/v1/subject-assignments/all',
 
     //teachers
     getAllTeachersUrl:'http://localhost:8080/api/v1/teacher/all'

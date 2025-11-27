@@ -18,6 +18,10 @@
         {{ erroMSG }}
       </div>
 
+      <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+      </div>
+
       <div *ngIf="user && !isLoading && !erroMSG">
         <form>
           <div class="mb-3">
@@ -32,9 +36,12 @@
             <label for="email" class="form-label">Correo Electrónico:</label>
             <input type="email" class="form-control" id="email" [ngModel]="user.email" name="email">
           </div>
-          <!-- Add more fields as needed for editing -->
-          <button type="submit" class="btn btn-primary" disabled>Guardar Cambios</button>
+          <!-- bottones de edicion -->
+          <div class="btnWrapper">
+          <button type="submit" class="btn btn-primary" (click)="updateUser()">Guardar Cambios</button>
           <button type="button" class="btn btn-secondary" (click)="router.navigate(['/home/administracion/usuarios'])">Cancelar</button>
+          <button type="button" class="btn btn-danger" (click)="deleteUser()">Eliminar</button>
+          </div>
         </form>
       </div>
     </div>

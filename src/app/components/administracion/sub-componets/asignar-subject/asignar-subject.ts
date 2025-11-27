@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-editar-subject',
+  selector: 'app-asignar-subject',
   standalone: true,
   imports: [
     CommonModule,
@@ -21,10 +21,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     MatIconModule,
     NgbModule
   ],
-  templateUrl: './editar-subject.html',
-  styleUrl: './editar-subject.css',
+  templateUrl: './asignar-subject.html',
+  styleUrl: './asignar-subject.css',
 })
-export class EditarSubject implements OnInit {
+export class AsignarSubject implements OnInit {
   subjectAssignedId: number | null = null;
   editSubjectForm!: FormGroup;
   erroMSG: string = '';
@@ -236,7 +236,7 @@ export class EditarSubject implements OnInit {
 
       this.subjectService.updateSubjectAssigned(this.subjectAssignedId, updatedSubject).subscribe({
         next: () => {
-          this.router.navigate(['/home/administracion/subjects']); // Navegar de vuelta a la lista de materias
+          this.router.navigate(['/home/administracion/assigned-subjects']); // Navegar de vuelta a la lista de materias
         },
         error: (err: any) => {
           this.erroMSG = 'Error al actualizar la materia asignada: ' + err.message; // Mensaje de error
@@ -255,6 +255,8 @@ export class EditarSubject implements OnInit {
    * Navega de vuelta a la página de administración de materias.
    */
   goBack(): void {
-    this.router.navigate(['/home/administracion/subjects']);
+    this.router.navigate(['/home/administracion/assigned-subjects']);
   }
+
+
 }

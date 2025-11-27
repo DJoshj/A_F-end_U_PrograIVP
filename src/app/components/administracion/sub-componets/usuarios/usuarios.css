@@ -103,7 +103,7 @@ mat-form-field{
     width:200px;
     height:60px;
     position: absolute;
-    left:60%;
+    left:50%;
     top:50%;
     transform: translate(-50%, -50%);
 }

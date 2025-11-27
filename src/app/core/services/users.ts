@@ -64,7 +64,39 @@ export class UsersService {
       return this.httpclient.post<any>(`${environment.createUserUrl}/${rolId}`, userData, { headers });
     }
 
-    // Método para notificar a los suscriptores que los datos de usuarios han cambiado
+    //eliminar usuario
+    public deleteUser(id:number):Observable<any | null>{
+      const token = this.authService.getToken();
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      }); 
+      return this.httpclient.delete<any>(`${environment.DeleteUserUrl}/${id}`,{headers}).pipe(
+            catchError(error => {
+          console.error('Error al eliminar usuario:', error);
+          return of(null); 
+        })
+      )
+      
+      ;
+    }
+
+    // Actualizar usuario
+    public updateUser(id: number, userData: any): Observable<any> {
+      const token = this.authService.getToken();
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      });
+      return this.httpclient.put<any>(`${environment.UserUrl}/${id}`, userData, { headers }).pipe(
+        tap(() => this.notifyUsersChanged()), // Notificar cambios después de una actualización exitosa
+        catchError(error => {
+          console.error('Error al actualizar usuario:', error);
+          return of(null);
+        })
+      );
+    }
+
+    // metodo  para notificar por medio de subscripcion que los datos de usuarios han cambiado
     notifyUsersChanged() {
       this._usersChanged.next();
     }

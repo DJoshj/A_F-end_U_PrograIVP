@@ -3,7 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UsersService } from '../../../../core/services/users';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon'; // Importar MatIconModule
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'; // Importar MatSnackBar y MatSnackBarModule
 
 @Component({
   selector: 'app-editar-usuario',
@@ -11,7 +12,8 @@ import { MatIconModule } from '@angular/material/icon'; // Importar MatIconModul
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatIconModule // Añadir MatIconModule a los imports
+    MatIconModule, // Añadir MatIconModule a los imports
+    MatSnackBarModule // Añadir MatSnackBarModule a los imports
   ],
   templateUrl: './editar-usuario.html',
   styleUrl: './editar-usuario.css',
@@ -21,11 +23,13 @@ export class EditarUsuario implements OnInit {
   user: any;
   erroMSG: string = '';
   isLoading = true; // Propiedad para controlar el estado de carga
+  successMessage: string = ''; // Propiedad para mostrar mensaje de éxito
 
   constructor(
     private route: ActivatedRoute,
     private userService: UsersService,
-    public router: Router
+    public router: Router,
+    private snackBar: MatSnackBar // Inyectar MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -38,6 +42,60 @@ export class EditarUsuario implements OnInit {
         this.isLoading = false; // Finalizar carga si no hay nombre de usuario
       }
     });
+  }
+
+  /**
+   * Actualiza los datos del usuario.
+   */
+  updateUser(): void {
+    if (this.user && this.user.userId) {
+      this.isLoading = true;
+      this.userService.updateUser(this.user.userId, this.user).subscribe({
+        next: () => {
+          this.successMessage = 'Usuario actualizado exitosamente.';
+          this.snackBar.open('Usuario actualizado exitosamente', 'Cerrar', {
+            duration: 3000,
+          });
+          this.isLoading = false;
+        },
+        error: (err: any) => {
+          this.erroMSG = 'Error al actualizar el usuario: ' + err.message;
+          this.snackBar.open('Error al actualizar el usuario', 'Cerrar', {
+            duration: 3000,
+          });
+          console.error('Error al actualizar el usuario:', err);
+          this.isLoading = false;
+        }
+      });
+    }
+  }
+
+  /**
+   * Elimina el usuario actual.
+   */
+  deleteUser(): void {
+    if (this.user && this.user.userId) {
+      if (confirm('¿Está seguro de que desea eliminar este usuario?')) {
+        this.isLoading = true;
+        this.userService.deleteUser(this.user.userId).subscribe({
+          next: () => {
+            this.snackBar.open('Usuario eliminado exitosamente', 'Cerrar', {
+              duration: 3000,
+            });
+            this.router.navigate(['/home/administracion/usuarios']); // Redirigir a la página de usuarios
+            this.isLoading = false;
+          },
+          error: (err: any) => {
+            this.erroMSG = 'Error al eliminar el usuario: ' + err.message;
+            this.snackBar.open('Error al eliminar el usuario', 'Cerrar', {
+              duration: 3000,
+            });
+            console.error('Error al eliminar el usuario:', err);
+            this.isLoading = false;
+          }
+        });
+      }
+    }
   }
 
   /**
