@@ -4,7 +4,14 @@
          <h1>Administracion</h1>
         <div class="nav-buttons">
             <button class="glow-on-hover" routerLink="/home/administracion/usuarios">Usuarios</button>
-            <button class="glow-on-hover" routerLink="/home/administracion/subjects" >Materias</button>
+            <div ngbDropdown class="d-inline-block">
+                <button type="button" class="glow-on-hover" id="dropdownBasic1" ngbDropdownToggle>Materias</button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button ngbDropdownItem routerLink="/home/administracion/assigned-subjects">Materias Asignadas</button>
+                    <button ngbDropdownItem routerLink="/home/administracion/subjects">Materias</button>
+                    <button ngbDropdownItem routerLink="#">Option 3</button>
+                </div>
+            </div>
             <button class="glow-on-hover" routerLink="#" ></button>
             <button  class="glow-on-hover" routerLink="#" ></button>
         </div>

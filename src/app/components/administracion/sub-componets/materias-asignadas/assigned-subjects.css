@@ -65,7 +65,7 @@ td{
     text-align: center;
     vertical-align:middle;
     padding: 0;
-    padding-top: 10 px;
+    padding-top: 10px;
     padding-bottom: 10px;
 }
 
@@ -112,7 +112,7 @@ mat-form-field{
     width:200px;
     height:60px;
     position: absolute;
-    left:60%;
+    left:50%;
     top:50%;
     transform: translate(-50%, -50%);
 }

@@ -9,10 +9,10 @@ import { NgbModule, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CreateUserModal } from '../../../modals/create-user-modal/create-user-modal';
 import { Subscription } from 'rxjs'; // Import Subscription
-import { SubjectService } from '../../../../core/services/subject-service';
+import { AssigenedSubjectService } from '../../../../core/services/Assignedsubject-service';
 
 @Component({
-  selector: 'app-subjects',
+  selector: 'app-assigned-subjects',
   providers: [NgbModal, NgbModalConfig, CreateUserModal],
   imports: [
     CommonModule,
@@ -20,17 +20,17 @@ import { SubjectService } from '../../../../core/services/subject-service';
     MatIconModule,
     NgbPagination,
     NgbModule],
-  templateUrl: './subjects.html',
-  styleUrl: './subjects.css',
+  templateUrl: './assigned-subjects.html',
+  styleUrl: './assigned-subjects.css',
 })
-export class Subjects implements OnInit, OnDestroy {
+export class AssignedSubjects implements OnInit, OnDestroy {
 
   subjects: any[] = [];
   erroMSG = '';
   isLoading = true; // Add loading state
   private usersChangedSubscription!: Subscription; // Declare subscription and mark as definitely assigned
 
-  constructor(private subjectService: SubjectService,
+  constructor(private assigenedSubjectService: AssigenedSubjectService,
     private authService: AuthService,
     private router: Router) {
 
@@ -45,7 +45,7 @@ export class Subjects implements OnInit, OnDestroy {
     this.loadSubjects();
 
     // Se subscribe al evento de cambio de los subjects
-    this.usersChangedSubscription = this.subjectService.usersChanged$.subscribe(() => {
+    this.usersChangedSubscription = this.assigenedSubjectService.subjectsChanged$.subscribe(() => {
       this.loadSubjects();
     });
   }
@@ -62,7 +62,7 @@ export class Subjects implements OnInit, OnDestroy {
 
   loadSubjects(): void {
     this.isLoading = true;
-    this.subjectService.getAllsubjects().subscribe({
+    this.assigenedSubjectService.getAllsubjects().subscribe({
       next: (data: any) => {
         console.log('Subjects data:', data); // Add console log here
         this.subjects = data;
@@ -85,7 +85,7 @@ export class Subjects implements OnInit, OnDestroy {
 
 
   editSubject(subjectAssignedId: number) {
-    this.router.navigate(['/home/administracion/editarSubject', subjectAssignedId]);
+    this.router.navigate(['/home/administracion/asignarSubject', subjectAssignedId]);
   }
 
   //paginator
