@@ -3,6 +3,10 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./", // Base URL para la resolución de módulos
+    "paths": {
+      "@app/*": ["src/app/*"] // Mapeo para simplificar importaciones
+    },
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,

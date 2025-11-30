@@ -8,7 +8,7 @@ import { Administracion } from './components/administracion/administracion';
 import { Usuarios } from './components/administracion/sub-componets/usuarios/usuarios';
 import { AuthGuardGuard } from './guards/auth-guard-guard';
 import { EditarUsuario } from './components/administracion/sub-componets/editar-usuario/editar-usuario';
-import { AssignedSubjects } from './components/administracion/sub-componets/materias-asignadas/assigned-subjects';
+import { AssignedSubjects } from './components/administracion/sub-componets/assigned-subjects/assigned-subjects';
 import { AsignarSubject } from './components/administracion/sub-componets/asignar-subject/asignar-subject';
 import { AuthorizationGuard } from './guards/authorizationGuard'; // Asegurarse de que AuthorizationGuard esté importado
 import { UserRole } from './enums/enums'; // Importar UserRole

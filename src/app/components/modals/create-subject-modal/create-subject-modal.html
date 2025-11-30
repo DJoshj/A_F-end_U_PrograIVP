@@ -1,0 +1,33 @@
+<div class="modal-header">
+  <h4 class="modal-title">Agregar Nueva Materia</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="mb-3">
+      <label for="subjectCode" class="form-label">Código de Materia</label>
+      <input type="text" class="form-control" id="subjectCode" [(ngModel)]="subjectCode" name="subjectCode" required>
+    </div>
+    <div class="mb-3">
+      <label for="subjectName" class="form-label">Nombre de Materia</label>
+      <input type="text" class="form-control" id="subjectName" [(ngModel)]="subjectName" name="subjectName" required>
+    </div>
+    <div class="mb-3">
+      <label for="valueUnits" class="form-label">Unidades Valorativas</label>
+      <input type="number" class="form-control" id="valueUnits" [(ngModel)]="valueUnits" name="valueUnits" required>
+    </div>
+    <div class="mb-3">
+      <label for="career" class="form-label">Carrera</label>
+      <select class="form-select" id="career" [(ngModel)]="selectedCareerId" name="career" required>
+        <option [ngValue]="null" disabled>Seleccione una carrera</option>
+        @for (career of careers; track career.careerId) {
+          <option [ngValue]="career.careerId">{{ career.nameCareer }}</option>
+        }
+      </select>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss('cancel')">Cancelar</button>
+  <button type="button" class="btn btn-primary" (click)="saveSubject()">Guardar</button>
+</div>
