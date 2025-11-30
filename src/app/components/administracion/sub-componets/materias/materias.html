@@ -1,49 +1,59 @@
 <div class="container-general">
 
-    <!-- Search bar -->
+    <!-- Barra de búsqueda y botones de acción -->
   <div class="nav-bar">
-    <input type="text" class="" placeholder="Nombre de materia"/>
-    <button>Crear Usuario</button>
+    <input type="text" class="" placeholder="Nombre o código de materia" [(ngModel)]="searchTerm"/>
+    <button class="" (click)="searchSubjects()">Buscar</button>
+    <button class="" (click)="showAllSubjects()">Mostrar Todos</button>
+    <button class="" (click)="openCreateSubjectModal()">Agregar Materia</button>
   </div>
 
-  <div class="table">
-    <!-- mensaje de error -->
+  <div class="table-container">
+    <!-- Mensaje de error -->
     @if (erroMSG) {
     <div class="error-message">{{ erroMSG }}</div>
     }
-    <!-- fin de error -->
+    <!-- Fin de error -->
 
-    <!-- Table -->
-    <table class="table table-hover table-borderless ">
-      <thead>
-        <tr>
-          <th scope="col" sortable="subjectCode">Codigo</th>
-          <th scope="col" sortable="name">Nombre de materia</th>
-          <th scope="col" sortable="careerName">Carrera</th>
-          <th scope="col">Modificacion</th>
-        </tr>
-      </thead>
+    <!-- Tabla de Materias -->
+    @if (showTable) {
+      <table class="table table-hover table-borderless ">
+        <thead>
+          <tr>
+            <th scope="col" sortable="subjectCode">Código</th>
+            <th scope="col" sortable="name">Nombre de Materia</th>
+            <th scope="col" sortable="careerName">Carrera</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
 
-      <tbody>
-        <tr *ngFor="let u of filteredUsers | slice:(page-1)*pageSize : (page-1)*pageSize + pageSize">
-          <td scope="row">{{ u.subjectCode }}</td>
-          <td scope="row">{{u.name}}</td>
-          <td scope="row">{{ u.careerName }}</td>
-          <td scope="row"><button >Modificar</button></td>
-        </tr>
-      </tbody>
-    </table>
+        <tbody>
+          @for (s of filteredSubjects | slice:(page-1)*pageSize : (page-1)*pageSize + pageSize; track s.subjectId) {
+            <tr>
+              <td scope="row">{{ s.subjectCode }}</td>
+              <td scope="row">{{ s.name }}</td>
+              <td scope="row">{{ s.careerName }}</td>
+              <td scope="row">
+                <button class="btn btn-danger" (click)="deleteSubject(s.subjectId)">Eliminar Materia</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
 
-    <!-- Pagination -->
-    <div class="d-flex justify-content-center mt-3">
-      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="filteredUsers.length" [rotate]="true"
-        [ellipses]="true">
-      </ngb-pagination>
-    </div>
+      <!-- Paginación -->
+      <div class="d-flex justify-content-center mt-3">
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="filteredSubjects.length" [rotate]="true"
+          [ellipses]="true">
+        </ngb-pagination>
+      </div>
+    } @else if (!isLoading && !erroMSG) {
+
+    }
   </div>
 
 
-  <!-- cargar -->
+  <!-- Indicador de carga -->
   @if (isLoading && !erroMSG) {
     <div class="wrapper">
       <div class="circle"></div>
@@ -54,8 +64,8 @@
       <div class="shadow"></div>
       <span>Cargando</span>
     </div>
-  } @else if (!isLoading && subjects.length === 0 && !erroMSG) {
-    <div>No hay usuarios para mostrar.</div>
+  } @else if (!isLoading && subjects.length === 0 && !erroMSG && showTable) {
+    <div>No hay materias para mostrar.</div>
   }
 
 

@@ -18,9 +18,15 @@ export const environment = {
     
     //materias
     getAllSubjectUrl: 'http://localhost:8080/api/v1/subjects/all',
+    createSubjectUrl: 'http://localhost:8080/api/v1/subjects/create',
+    deleteSubjectUrl: 'http://localhost:8080/api/v1/subjects/', // Se concatenará el ID
+    searchSubjectByCodeUrl: 'http://localhost:8080/api/v1/subjects/code/', // Se concatenará el código de la materia
 
     //materias asignadas
     getAllAssignedSubjetsURl:'http://localhost:8080/api/v1/subject-assignments/all',
+
+    //carreras
+    getAllCareersUrl: 'http://localhost:8080/api/v1/career/all',
 
     //teachers
     getAllTeachersUrl:'http://localhost:8080/api/v1/teacher/all'
