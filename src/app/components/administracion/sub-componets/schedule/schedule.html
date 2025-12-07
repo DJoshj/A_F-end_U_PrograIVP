@@ -1,0 +1,79 @@
+<!-- schedule.html -->
+<div class="container-general">
+  @if (!showAssignedScheduleDetails) {
+    <!-- Barra de búsqueda y botones de acción -->
+    <div class="nav-bar">
+      <input type="text" class="" placeholder="Día del horario" [(ngModel)]="searchTerm"/>
+      <button class="" (click)="searchSchedules()">Buscar</button>
+      <button class="" (click)="showAllSchedules()">Mostrar</button>
+      <button class="" (click)="openCreateScheduleModal()">Agregar Horario</button>
+    </div>
+
+    <div class="table-container">
+      <!-- Mensaje de error -->
+      @if (erroMSG) {
+      <div class="error-message">{{ erroMSG }}</div>
+      }
+      <!-- Fin de error -->
+
+      <!-- Tabla de Horarios -->
+      @if (isScheduleTableVisible) {
+        <table class="table table-hover table-borderless ">
+          <thead>
+            <tr>
+              <th scope="col">Días</th>
+              <th scope="col">Horario</th>
+              <th scope="col">Disponibilidad</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (s of filteredSchedules | slice:(page-1)*pageSize : (page-1)*pageSize + pageSize; track s.scheduleId) {
+              <tr>
+                <td scope="row">{{ s.days }}</td>
+                <td scope="row">{{ s.schedule }}</td>
+                <td scope="row">{{ s.available ? 'Sí' : 'No' }}</td>
+                <td scope="row">
+                  <button class="btn btn-info" (click)="editSchedule(s.scheduleId)">Editar</button>
+                  <button class="btn btn-danger" (click)="deleteSchedule(s.scheduleId)">Eliminar</button>
+                  <button class="btn btn-primary" (click)="viewScheduleDetails(s.scheduleId)">Ver Datos</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <!-- Paginación -->
+        <div class="d-flex justify-content-center mt-3">
+          <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="filteredSchedules.length" [rotate]="true"
+            [ellipses]="true">
+          </ngb-pagination>
+        </div>
+      } @else if (!isLoading && !erroMSG) {
+
+      }
+    </div>
+
+
+    <!-- Indicador de carga -->
+    @if (isLoading && !erroMSG) {
+      <div class="wrapper">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="shadow"></div>
+        <div class="shadow"></div>
+        <div class="shadow"></div>
+        <span>Cargando</span>
+      </div>
+    } @else if (!isLoading && schedules.length === 0 && !erroMSG && isScheduleTableVisible) {
+      <div>No hay horarios para mostrar.</div>
+    }
+  } @else if (showAssignedScheduleDetails && selectedScheduleId !== null) {
+    <div class="details-view">
+      <app-assigned-schedule-details [scheduleId]="selectedScheduleId"></app-assigned-schedule-details>
+      <button class="btn btn-secondary mt-3" (click)="hideScheduleDetails()">Volver a Horarios</button>
+    </div>
+  }
+</div>

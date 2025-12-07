@@ -1,0 +1,30 @@
+<!-- create-schedule-modal.html -->
+<div class="modal-header">
+  <h4 class="modal-title">{{ title }}</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="mb-3">
+      <label for="day" class="form-label">Día:</label>
+      <input type="text" class="form-control" id="day" [(ngModel)]="dayInput" name="day" required>
+    </div>
+    <div class="mb-3">
+      <label for="startTime" class="form-label">Hora de Inicio:</label>
+      <input type="time" class="form-control" id="startTime" [(ngModel)]="startTimeInput" name="startTime" required>
+    </div>
+    <div class="mb-3">
+      <label for="endTime" class="form-label">Hora de Fin:</label>
+      <input type="time" class="form-control" id="endTime" [(ngModel)]="endTimeInput" name="endTime" required [disabled]="!startTimeInput">
+    </div>
+    <!-- El campo 'available' no es parte del DTO de creación/actualización del backend -->
+    <!-- <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" id="available" [(ngModel)]="availableInput" name="available">
+      <label class="form-check-label" for="available">Disponible</label>
+    </div> -->
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss('cancel')">Cancelar</button>
+  <button type="button" class="btn btn-primary" (click)="saveSchedule()">Guardar</button>
+</div>

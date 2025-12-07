@@ -12,8 +12,9 @@ import { AssignedSubjects } from './components/administracion/sub-componets/assi
 import { AsignarSubject } from './components/administracion/sub-componets/asignar-subject/asignar-subject';
 import { AuthorizationGuard } from './guards/authorizationGuard'; // Asegurarse de que AuthorizationGuard esté importado
 import { UserRole } from './enums/enums'; // Importar UserRole
-import { Schedule } from './components/schedule/schedule';
+import { ScheduleComponent } from './components/administracion/sub-componets/schedule/schedule'; // Nueva ruta
 import { Materias } from './components/administracion/sub-componets/materias/materias';
+import { AssignedScheduleDetailsComponent } from './components/administracion/sub-componets/schedule/sub-components/assigned-schedule-details/assigned-schedule-details'; // Nueva ruta
 
 export const routes: Routes = [
     { path: 'login', component: Login },
@@ -35,10 +36,16 @@ export const routes: Routes = [
                           canActivate: [AuthGuardGuard, AuthorizationGuard],
                           data: { roles: [UserRole.ADMIN] }
                         },
-                        {path:'subjects',component:Materias}
+                        {path:'subjects',component:Materias},
+                        {
+                          path:'schedule',
+                          component:ScheduleComponent,
+                          children: [
+                            { path: 'details/:scheduleId', component: AssignedScheduleDetailsComponent } // Nueva ruta para detalles
+                          ]
+                        }
                     ]
-            },
-            {path:'schedule',component:Schedule}
+            }
         ]
 
     },

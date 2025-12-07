@@ -1,0 +1,37 @@
+/* schedule-success-modal.css */
+.modal-header {
+  background-color: #28a745; /* Verde para indicar éxito */
+  color: white;
+  border-bottom: none;
+}
+
+.modal-title {
+  font-weight: bold;
+}
+
+.modal-body {
+  padding: 20px;
+  color: #333;
+}
+
+.modal-footer {
+  border-top: none;
+  padding: 15px 20px;
+  background-color: #f8f9fa;
+}
+
+.btn-primary {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+.btn-close {
+  color: white;
+  filter: invert(1);
+}
