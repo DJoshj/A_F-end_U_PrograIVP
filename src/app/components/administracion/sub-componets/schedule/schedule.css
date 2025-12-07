@@ -198,3 +198,54 @@ mat-form-field{
     color: #000000;
     left:15%;
 }
+
+
+/* responsive */
+
+@media (max-width:1500px){
+
+.nav-bar input,button{
+    font-size: 0.9rem;
+}
+
+.nav-bar button{
+    font-size: 0.9rem;
+    width: 150px;
+
+}
+
+* tabla */
+.table-container {
+
+}
+
+.table {
+
+}
+
+th{
+    background-color:#0F2366;
+    color: white;
+    font-weight: 400;
+    align-self: center;
+    text-align: center;
+}
+
+
+td{
+
+    margin: 0;
+    padding: 0;
+}
+
+tbody button{
+    padding: 0;
+    width: 80px;
+    height: 10px;
+    border-radius: 0;
+
+}
+
+
+
+}

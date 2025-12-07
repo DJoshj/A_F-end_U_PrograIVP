@@ -182,7 +182,7 @@
 /* Adaptable para pantallas <= 1500px */
 @media (max-width: 1500px) {
   .side-nav {
-    width: 25%; /* Ajusta el ancho de la barra lateral */
+    width: 23%; /* Ajusta el ancho de la barra lateral */
   }
 
   .logo-nav img {
@@ -193,9 +193,14 @@
     font-size: 1.3rem; /* Título ligeramente más pequeño */
   }
 
+.opciones{
+  margin-top: 20px;
+}
+
   .opciones button {
-    width: 80%; /* Ajusta el ancho del botón */
-    padding: 8px; /* Ajusta el relleno */
+    width: 50%; /* Ajusta el ancho del botón */
+    padding: 5px; /* Ajusta el relleno */
     font-size: 0.9rem; /* Ajusta el tamaño de la fuente */
+    height: 35px;
   }
 }

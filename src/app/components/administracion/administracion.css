@@ -112,6 +112,7 @@
 
 .glow-on-hover:hover:before {
     opacity: 1;
+    
 }
 
 
@@ -119,4 +120,12 @@
     0% { background-position: 0 0; }
     50% { background-position: 400% 0; }
     100% { background-position: 0 0; }
+}
+
+
+/* responsive */
+
+@media (max-width:1500px){
+
+    
 }
