@@ -1,0 +1,45 @@
+<div class="modal-header">
+  <h4 class="modal-title">Detalles del Horario Asignado</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+</div>
+<div class="modal-body">
+  @if (erroMSG) {
+    <div class="error-message">{{ erroMSG }}</div>
+  }
+  @if (isLoading && !erroMSG) {
+    <div class="wrapper">
+      <div class="circle"></div>
+      <div class="circle"></div>
+      <div class="circle"></div>
+      <span>Cargando</span>
+    </div>
+  } @else if (!isLoading && assignedSubjects.length === 0 && !erroMSG) {
+    <div>No hay materias asignadas para este horario.</div>
+  } @else {
+    <div class="table-responsive">
+      <table class="table table-hover table-borderless">
+        <thead>
+          <tr>
+            <th scope="col">Materia</th>
+            <th scope="col">Código</th>
+            <th scope="col">Aula</th>
+            <th scope="col">Docente</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (subject of assignedSubjects; track subject.subjectAssignedId) {
+            <tr>
+              <td>{{ subject.subjectName }}</td>
+              <td>{{ subject.subjectCode }}</td>
+              <td>{{ subject.classroomName }}</td>
+              <td>{{ subject.teacherName }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+</div>

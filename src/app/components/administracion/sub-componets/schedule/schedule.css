@@ -1,4 +1,3 @@
-/* schedule.css */
 * {
     margin: 0;
     padding: 0;
@@ -15,7 +14,7 @@
     margin-bottom: 1%;
 }
 
-.nav-bar input,button{
+.nav-bar input,button,select{
     width: 30%;
     height: 50px;
     margin-left: 10px;
@@ -42,14 +41,14 @@
     background-color:#4edaab;
 }
 
-/* tabla */
+/* Estilos de la tabla */
 .table-container {
     border-bottom-left-radius:10px;
     border-bottom-right-radius:10px;
 }
 
 .table {
-    padding: 0 10px; /* Re-added padding to the actual table element */
+    padding: 0 10px;
     font-size: 0.95rem;
 }
 
@@ -89,7 +88,7 @@ tbody button:hover{
 }
 
 
-/* responsive */
+/* Estilos responsivos */
 
 @media (max-width:1500px){
 
@@ -103,11 +102,7 @@ mat-form-field{
 }
 
 
-
-
-
-
-/* pantalla de carga */
+/* Pantalla de carga */
 
 .wrapper{
     width:200px;
@@ -197,4 +192,46 @@ mat-form-field{
     letter-spacing: 12px;
     color: #000000;
     left:15%;
+}
+
+
+/* Estilos responsivos */
+
+@media (max-width:1500px){
+
+.nav-bar input,button{
+    font-size: 0.9rem;
+}
+
+.nav-bar button{
+    font-size: 0.9rem;
+    width: 150px;
+
+}
+
+
+th{
+    background-color:#0F2366;
+    color: white;
+    font-weight: 400;
+    align-self: center;
+    text-align: center;
+}
+
+
+td{
+
+    padding: 5px;
+}
+
+tbody button{
+    padding: 0;
+    width: 80px;
+    height: 25px;
+    border-radius: 2px;
+
+}
+
+
+
 }

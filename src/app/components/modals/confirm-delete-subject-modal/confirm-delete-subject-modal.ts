@@ -13,4 +13,18 @@ export class ConfirmDeleteSubjectModal {
   @Input() message!: string;
 
   constructor(public activeModal: NgbActiveModal) {}
+
+  /**
+   * Cierra el modal con un resultado de confirmación.
+   */
+  confirm(): void {
+    this.activeModal.close('confirm');
+  }
+
+  /**
+   * Cierra el modal con un resultado de cancelación.
+   */
+  cancel(): void {
+    this.activeModal.dismiss('cancel');
+}
 }

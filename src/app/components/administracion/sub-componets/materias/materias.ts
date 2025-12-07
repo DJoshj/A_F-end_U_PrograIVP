@@ -10,12 +10,12 @@ import { SubjectService } from '../../../../core/services/subject-service';
 import { CreateSubjectModal } from '@app/components/modals/create-subject-modal/create-subject-modal';
 import { ErrorModal } from '@app/components/modals/error-modal/error-modal';
 import { SubjectDeleteSuccessModal } from '@app/components/modals/subject-delete-success-modal/subject-delete-success-modal';
-import { ConfirmDeleteSubjectModal } from '@app/components/modals/confirm-delete-subject-modal/confirm-delete-subject-modal'; // Importar el nuevo modal de confirmación
+import { ConfirmDeleteSubjectModal } from '@app/components/modals/confirm-delete-subject-modal/confirm-delete-subject-modal';
 
 @Component({
   selector: 'app-materias',
   standalone: true,
-  providers: [NgbModal, NgbModalConfig, CreateSubjectModal, ErrorModal, SubjectDeleteSuccessModal, ConfirmDeleteSubjectModal], // Añadir ConfirmDeleteSubjectModal
+  providers: [NgbModal, NgbModalConfig, CreateSubjectModal, ErrorModal, SubjectDeleteSuccessModal, ConfirmDeleteSubjectModal],
   imports: [
     CommonModule,
     FormsModule,
@@ -64,6 +64,9 @@ export class Materias implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Carga todas las materias desde el servicio.
+   */
   loadSubjects(): void {
     this.isLoading = true;
     this.erroMSG = '';
@@ -84,7 +87,10 @@ export class Materias implements OnInit, OnDestroy {
     });
   }
 
-  // Eliminar una materia por su ID (ahora con modal de confirmación)
+  /**
+   * Elimina una materia por su ID (ahora con modal de confirmación).
+   * @param subjectId El ID de la materia a eliminar.
+   */
   deleteSubject(subjectId: number): void {
     const modalRef = this.modalService.open(ConfirmDeleteSubjectModal);
     modalRef.componentInstance.message = '¿Está seguro de que desea eliminar esta materia?';
@@ -110,6 +116,9 @@ export class Materias implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Abre el modal para crear una nueva materia.
+   */
   openCreateSubjectModal(): void {
     const modalRef = this.modalService.open(CreateSubjectModal);
     modalRef.result.then(
@@ -124,6 +133,9 @@ export class Materias implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Busca materias por término de búsqueda.
+   */
   searchSubjects(): void {
     if (!this.searchTerm.trim()) {
       this.openErrorModal('Por favor, ingrese un término de búsqueda.');
@@ -152,6 +164,9 @@ export class Materias implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Muestra todas las materias o las oculta.
+   */
   showAllSubjects(): void {
     if (this.showTable) {
       this.showTable = false;
@@ -162,6 +177,9 @@ export class Materias implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Propiedad computada para filtrar materias en el lado del cliente (para paginación).
+   */
   get filteredSubjects() {
     if (!this.searchTerm) {
       return this.subjects;
@@ -176,11 +194,19 @@ export class Materias implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Abre un modal de error.
+   * @param message El mensaje de error a mostrar.
+   */
   openErrorModal(message: string): void {
     const modalRef = this.modalService.open(ErrorModal);
     modalRef.componentInstance.message = message;
   }
 
+  /**
+   * Abre un modal de éxito de eliminación de materia.
+   * @param message El mensaje de éxito a mostrar.
+   */
   openDeleteSuccessModal(message: string): void {
     const modalRef = this.modalService.open(SubjectDeleteSuccessModal);
     modalRef.componentInstance.message = message;

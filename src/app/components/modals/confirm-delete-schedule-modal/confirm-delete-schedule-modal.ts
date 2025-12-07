@@ -1,5 +1,3 @@
-// confirm-delete-schedule-modal.ts
-// Modal de confirmación para eliminar un horario.
 import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
@@ -16,12 +14,16 @@ export class ConfirmDeleteScheduleModal {
 
   constructor(public activeModal: NgbActiveModal) {}
 
-  // Cierra el modal con un resultado de confirmación
+  /**
+   * Cierra el modal con un resultado de confirmación.
+   */
   confirm(): void {
     this.activeModal.close('confirm');
   }
 
-  // Cierra el modal con un resultado de cancelación
+  /**
+   * Cierra el modal con un resultado de cancelación.
+   */
   cancel(): void {
     this.activeModal.dismiss('cancel');
   }

@@ -19,3 +19,8 @@
   width: 3rem;
   height: 3rem;
 }
+
+
+/* Estilos responsivos para pantallas de hasta 1500px */
+@media (max-width: 1500px) {
+}

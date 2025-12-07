@@ -21,8 +21,6 @@
   z-index: -10;
 }
 
-
-
 .login-container {
 width:50%;
 height:60%;
@@ -87,7 +85,6 @@ backdrop-filter: blur(20px);
     
 }
 
-
 mat-divider {
     width: 80%;
     margin-top: 10%;
@@ -107,13 +104,9 @@ mat-divider {
     margin-left: 10px;
 }
 
-/* show button */
-
 .password[_ngcontent-ng-c4145618514] button[_ngcontent-ng-c4145618514] {
     background-color: #63636300 !important;
 }
-/*  show button */
-/* modal */
 
 .modal-body{
   display: flex;
@@ -125,8 +118,6 @@ mat-divider {
 .modal-body p{
   margin: 0;
 }
-
-/* logo */
 
 .login-wrapper1{
     display: flex;
@@ -153,11 +144,7 @@ mat-divider {
     font-size: 1.5rem;
 }
 
-/*  */
-
-
-/* responsive */
-
+/* Estilos responsivos */
 @media (max-width: 1400px) {
   .login-container {
     width: 50%;

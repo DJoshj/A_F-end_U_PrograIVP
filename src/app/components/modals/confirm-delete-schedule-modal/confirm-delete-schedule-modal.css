@@ -1,6 +1,5 @@
-/* confirm-delete-schedule-modal.css */
 .modal-header {
-  background-color: #dc3545; /* Rojo para indicar peligro */
+  background-color: #dc3545;
   color: white;
   border-bottom: none;
 }

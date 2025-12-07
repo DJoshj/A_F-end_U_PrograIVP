@@ -30,10 +30,10 @@ export class AsignarSubject implements OnInit {
   erroMSG: string = '';
   teachers: any[] = [];
   schedules: any[] = [];
-  availableSchedules: any[] = []; // Para almacenar los horarios disponibles filtrados
+  availableSchedules: any[] = [];
   classrooms: any[] = [];
   periods: any[] = [];
-  allSubjectAssignments: any[] = []; // Para almacenar todas las asignaciones de materias
+  allSubjectAssignments: any[] = [];
   isLoading = true;
 
   constructor(
@@ -54,7 +54,7 @@ export class AsignarSubject implements OnInit {
       periodId: ['', Validators.required],
       scheduleId: ['', Validators.required],
       classroomId: ['', Validators.required],
-      maximumCapacity: ['', [Validators.required, Validators.min(1)]],
+      maximumCapacity: ['', [Validators.required, Validators.min(1), this.maximumCapacityValidator.bind(this)]],
       section: ['', Validators.required],
     });
   }
@@ -71,16 +71,37 @@ export class AsignarSubject implements OnInit {
       if (this.subjectAssignedId) {
         this.loadSubjectAssigned(this.subjectAssignedId);
         this.loadDropdownData();
-        this.loadAllSubjectAssignments(); // Cargar todas las asignaciones
+        this.loadAllSubjectAssignments();
       } else {
-        this.erroMSG = 'No se proporcionó ID de materia asignada.'; // Mensaje de error si no hay ID
+        this.erroMSG = 'No se proporcionó ID de materia asignada.';
         this.isLoading = false;
       }
     });
 
-    // Suscribirse a los cambios en los campos de periodo y aula para filtrar horarios
     this.editSubjectForm.get('periodId')?.valueChanges.subscribe(() => this.filterSchedules());
-    this.editSubjectForm.get('classroomId')?.valueChanges.subscribe(() => this.filterSchedules());
+    this.editSubjectForm.get('classroomId')?.valueChanges.subscribe(() => {
+      this.filterSchedules();
+      this.editSubjectForm.get('maximumCapacity')?.updateValueAndValidity();
+    });
+  }
+
+  /**
+   * Validador personalizado para la capacidad máxima para asegurar que no exceda la capacidad del aula.
+   */
+  maximumCapacityValidator(control: { value: number }): { [key: string]: any } | null {
+    const capacity = control.value;
+    const classroomId = this.editSubjectForm?.get('classroomId')?.value;
+
+    if (!capacity || !classroomId || !this.classrooms.length) {
+      return null;
+    }
+
+    const selectedClassroom = this.classrooms.find(c => c.classroomId === classroomId);
+
+    if (selectedClassroom && capacity > selectedClassroom.ability) {
+      return { 'capacityExceedsAbility': { max: selectedClassroom.ability, actual: capacity } };
+    }
+    return null;
   }
 
   /**
@@ -88,11 +109,9 @@ export class AsignarSubject implements OnInit {
    * @param id El ID de la materia asignada a cargar.
    */
   loadSubjectAssigned(id: number): void {
-    this.isLoading = true; // Indicar que se está cargando
+    this.isLoading = true;
     this.assigenedSubjectService.getSubjectAssignedById(id).subscribe({
       next: (data: any) => {
-        // Rellenar el formulario con los datos obtenidos
-        console.log(data);
         this.editSubjectForm.patchValue({
           subjectId: data.subjectId,
           subjectName: data.subjectName,
@@ -103,15 +122,15 @@ export class AsignarSubject implements OnInit {
           maximumCapacity: data.maximumCapacity,
           section: data.section,
         });
-        this.isLoading = false; // Finalizar carga
-        this.filterSchedules(); // Filtrar horarios después de cargar los datos iniciales
+        this.isLoading = false;
+        this.filterSchedules();
       },
       error: (err: any) => {
-        this.erroMSG = 'Error al cargar la materia asignada: ' + err.message; // Mensaje de error
+        this.erroMSG = 'Error al cargar la materia asignada: ' + err.message;
         console.error('Error al cargar la materia asignada:', err);
-        this.isLoading = false; // Finalizar carga
+        this.isLoading = false;
         if (err.status == 401 || err.status === 403) {
-          this.authService.logout(); // Cerrar sesión si hay error de autenticación/autorización
+          this.authService.logout();
         }
       }
     });
@@ -123,25 +142,25 @@ export class AsignarSubject implements OnInit {
   loadDropdownData(): void {
     this.teacherService.getAllTeachers().subscribe({
       next: (data: any) => this.teachers = data,
-      error: (err: any) => console.error('Error al cargar profesores:', err) // Manejo de error
+      error: (err: any) => console.error('Error al cargar profesores:', err)
     });
 
     this.scheduleService.getAllSchedules().subscribe({
       next: (data: any) => {
         this.schedules = data;
-        this.filterSchedules(); // Filtrar horarios después de cargarlos
+        this.filterSchedules();
       },
-      error: (err: any) => console.error('Error al cargar horarios:', err) // Manejo de error
+      error: (err: any) => console.error('Error al cargar horarios:', err)
     });
 
     this.classroomService.getAllClassrooms().subscribe({
       next: (data: any) => this.classrooms = data,
-      error: (err: any) => console.error('Error al cargar aulas:', err) // Manejo de error
+      error: (err: any) => console.error('Error al cargar aulas:', err)
     });
 
     this.periodService.getAllPeriods().subscribe({
       next: (data: any) => this.periods = data,
-      error: (err: any) => console.error('Error al cargar periodos:', err) // Manejo de error
+      error: (err: any) => console.error('Error al cargar periodos:', err)
     });
   }
 
@@ -152,9 +171,9 @@ export class AsignarSubject implements OnInit {
     this.assigenedSubjectService.getAllsubjects().subscribe({
       next: (data: any) => {
         this.allSubjectAssignments = data;
-        this.filterSchedules(); // Volver a filtrar horarios después de cargar todas las asignaciones
+        this.filterSchedules();
       },
-      error: (err: any) => console.error('Error al cargar todas las asignaciones de materias:', err) // Manejo de error
+      error: (err: any) => console.error('Error al cargar todas las asignaciones de materias:', err)
     });
   }
 
@@ -170,9 +189,8 @@ export class AsignarSubject implements OnInit {
 
     if (currentPeriodId && currentClassroomId && this.schedules.length > 0 && this.allSubjectAssignments.length > 0) {
       this.availableSchedules = this.schedules.filter(schedule => {
-        // Verificar si el horario está ocupado por otra asignación (excluyendo la actual)
         const isOccupied = this.allSubjectAssignments.some(assignment =>
-          assignment.subjectAssignedId !== this.subjectAssignedId && // Excluir la materia actual
+          assignment.subjectAssignedId !== this.subjectAssignedId &&
           assignment.classroomId === currentClassroomId &&
           assignment.scheduleId === schedule.scheduleId &&
           assignment.periodId === currentPeriodId
@@ -180,12 +198,10 @@ export class AsignarSubject implements OnInit {
         return !isOccupied;
       });
 
-      // Si el horario actualmente seleccionado ya no está disponible, deseleccionarlo
       if (currentScheduleId && !this.availableSchedules.some(s => s.scheduleId === currentScheduleId)) {
         this.editSubjectForm.get('scheduleId')?.setValue(null);
       }
     } else {
-      // Si no hay periodo o aula seleccionada, o si no hay datos cargados, mostrar todos los horarios
       this.availableSchedules = [...this.schedules];
     }
   }
@@ -194,13 +210,12 @@ export class AsignarSubject implements OnInit {
    * Maneja el envío del formulario para actualizar la materia asignada.
    */
   onSubmit(): void {
-    this.erroMSG = ''; // Limpiar mensajes de error previos
+    this.erroMSG = '';
     if (this.editSubjectForm.valid && this.subjectAssignedId) {
-      const formValues = this.editSubjectForm.getRawValue(); // Usar getRawValue para incluir campos deshabilitados
+      const formValues = this.editSubjectForm.getRawValue();
 
-      // Validar conflicto de horario en el frontend
       const classroomScheduleConflict = this.allSubjectAssignments.some(assignment =>
-        assignment.subjectAssignedId !== this.subjectAssignedId && // Excluir la materia actual
+        assignment.subjectAssignedId !== this.subjectAssignedId &&
         assignment.classroomId === formValues.classroomId &&
         assignment.scheduleId === formValues.scheduleId &&
         assignment.periodId === formValues.periodId
@@ -211,9 +226,8 @@ export class AsignarSubject implements OnInit {
         return;
       }
 
-      // Validar conflicto de docente en el frontend
       const teacherConflict = this.allSubjectAssignments.some(assignment =>
-        assignment.subjectAssignedId !== this.subjectAssignedId && // Excluir la materia actual
+        assignment.subjectAssignedId !== this.subjectAssignedId &&
         assignment.teacherId === formValues.teacherId &&
         assignment.scheduleId === formValues.scheduleId &&
         assignment.periodId === formValues.periodId
@@ -225,7 +239,7 @@ export class AsignarSubject implements OnInit {
       }
 
       const updatedSubject: SubjectAssignedDTO = {
-        subjectId: formValues.subjectId, // Ahora se incluye el subjectId deshabilitado
+        subjectId: formValues.subjectId,
         teacherId: formValues.teacherId,
         periodId: formValues.periodId,
         scheduleId: formValues.scheduleId,
@@ -234,20 +248,26 @@ export class AsignarSubject implements OnInit {
         section: formValues.section,
       };
 
+      console.log('Payload sent to backend:', updatedSubject);
+
       this.assigenedSubjectService.updateSubjectAssigned(this.subjectAssignedId, updatedSubject).subscribe({
         next: () => {
-          this.router.navigate(['/home/administracion/assigned-subjects']); // Navegar de vuelta a la lista de materias
+          this.router.navigate(['/home/administracion/assigned-subjects']);
         },
         error: (err: any) => {
-          this.erroMSG = 'Error al actualizar la materia asignada: ' + err.message; // Mensaje de error
+          if (err.error && typeof err.error === 'string') {
+            this.erroMSG = err.error;
+          } else {
+            this.erroMSG = 'Error al actualizar la materia asignada. Por favor, intente de nuevo.';
+          }
           console.error('Error al actualizar la materia asignada:', err);
           if (err.status == 401 || err.status === 403) {
-            this.authService.logout(); // Cerrar sesión si hay error de autenticación/autorización
+            this.authService.logout();
           }
         }
       });
     } else {
-      this.erroMSG = 'Por favor, complete todos los campos requeridos.'; // Mensaje de error si el formulario no es válido
+      this.erroMSG = 'Por favor, complete todos los campos requeridos.';
     }
   }
 
