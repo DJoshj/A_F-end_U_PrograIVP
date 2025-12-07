@@ -5,43 +5,36 @@ import { RouterOutlet, RouterLinkWithHref, Router, NavigationEnd } from '@angula
 import { MatListModule } from '@angular/material/list';
 import { AuthService } from '../../core/services/auth-service';
 import { UsersService } from '../../core/services/users';
-import { AuthGuardGuard } from '../../guards/auth-guard-guard';
-import { Observable, filter } from 'rxjs';
+import { filter } from 'rxjs';
 import { AuthorizationGuard } from '../../guards/authorizationGuard';
-
-import {MatButtonModule} from '@angular/material/button';
-
 
 @Component({
   selector: 'app-home',
+  standalone: true,
   imports: [
     CommonModule,
     RouterOutlet,
     MatIconModule,
     MatListModule,
     RouterLinkWithHref,
-     MatButtonModule
   ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
 
-  showFiller = false;
   username: string | null = null;
-  isAdmin$!: Observable<boolean>;
-  activeRoute: string = ''; // Guarda la ruta activa
-  showAdminButton: boolean = false; // Controla la visibilidad de los botones (solo admin)
+  activeRoute: string = '';
+  showAdminButton: boolean = false;
 
   constructor(private authService: AuthService, private usersService: UsersService, private authorizationGuard: AuthorizationGuard, private router: Router) { }
 
   ngOnInit(): void {
     this.username = this.authService.getUsername();
     this.usersService.getCurrentUserRole().subscribe(userRole => {
-      this.showAdminButton = userRole === 1; // Solo visible para administradores
+      this.showAdminButton = userRole === 1;
     });
 
-    // Se suscribe a los eventos del router para actualizar la ruta activa
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
@@ -49,12 +42,17 @@ export class Home implements OnInit {
     });
   }
 
-  // Cierra la sesión del usuario
+  /**
+   * Cierra la sesión del usuario.
+   */
   logout(): void {
     this.authService.logout();
   }
 
-  // Verifica si la ruta actual está activa
+  /**
+   * Verifica si la ruta actual está activa.
+   * @param route La ruta a verificar.
+   */
   isRouteActive(route: string): boolean {
     return this.activeRoute.includes(route);
   }

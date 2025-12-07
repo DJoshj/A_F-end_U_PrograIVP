@@ -1,5 +1,3 @@
-// create-schedule-modal.ts
-// Modal para crear o editar un horario.
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
@@ -18,16 +16,19 @@ import { ScheduleSuccessModal } from '../schedule-success-modal/schedule-success
   styleUrl: './create-schedule-modal.css',
 })
 export class CreateScheduleModal implements OnInit {
-  @Input() scheduleId: number | null = null; // Para edición
+  @Input() scheduleId: number | null = null;
   
-  // Propiedades locales para el formulario
   dayInput: string = '';
-  startTimeInput: string = '';
-  endTimeInput: string = '';
-  availableInput: boolean = true; // Mantener para la UI, pero no se envía al DTO del backend
+  startHourInput: string = '00';
+  startMinuteInput: string = '00';
+  endHourInput: string = '00';
+  endMinuteInput: string = '00';
 
   title: string = 'Crear Nuevo Horario';
   isEditMode: boolean = false;
+
+  hours: string[] = [];
+  minutes: string[] = ['00','10', '15','30', '45'];
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -36,6 +37,7 @@ export class CreateScheduleModal implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.generateHours();
     if (this.scheduleId) {
       this.isEditMode = true;
       this.title = 'Editar Horario';
@@ -43,15 +45,19 @@ export class CreateScheduleModal implements OnInit {
     }
   }
 
-  // Carga los datos del horario para edición
+  /**
+   * Carga los datos del horario para edición.
+   * @param id El ID del horario a cargar.
+   */
   loadScheduleForEdit(id: number): void {
     this.scheduleService.getScheduleById(id).subscribe({
       next: (data: Schedule) => {
         this.dayInput = data.days;
         const [startTime, endTime] = data.schedule.split('-');
-        this.startTimeInput = startTime;
-        this.endTimeInput = endTime;
-        this.availableInput = data.available; // Asumiendo que 'available' viene en el ScheduleResponseDTO
+        this.startHourInput = startTime.split(':')[0];
+        this.startMinuteInput = startTime.split(':')[1];
+        this.endHourInput = endTime.split(':')[0];
+        this.endMinuteInput = endTime.split(':')[1];
       },
       error: (err: any) => {
         console.error('Error al cargar horario para edición:', err);
@@ -61,24 +67,42 @@ export class CreateScheduleModal implements OnInit {
     });
   }
 
-  // Guarda el horario (crea o actualiza)
+  /**
+   * Guarda el horario (crea o actualiza) enviando los datos al servicio.
+   * Incluye validaciones de hora, minutos y duración mínima.
+   */
   saveSchedule(): void {
-    // Validar que la hora de inicio no sea mayor o igual que la hora de fin
-    if (this.startTimeInput && this.endTimeInput) {
-      const [startHour, startMinute] = this.startTimeInput.split(':').map(Number);
-      const [endHour, endMinute] = this.endTimeInput.split(':').map(Number);
+    const startTime = `${this.startHourInput}:${this.startMinuteInput}`;
+    const endTime = `${this.endHourInput}:${this.endMinuteInput}`;
 
-      if (startHour > endHour || (startHour === endHour && startMinute >= endMinute)) {
-        this.openErrorModal('La hora de inicio no puede ser mayor o igual que la hora de fin.');
-        return;
-      }
+    if (!this.startHourInput || !this.startMinuteInput || !this.endHourInput || !this.endMinuteInput) {
+      this.openErrorModal('Por favor, seleccione la hora y los minutos de inicio y fin.');
+      return;
     }
 
+    const startDateTime = new Date(`2000/01/01 ${startTime}`);
+    const endDateTime = new Date(`2000/01/01 ${endTime}`);
 
-    // Construir el DTO para el backend
+    if (startDateTime >= endDateTime) {
+      this.openErrorModal('La hora de inicio no puede ser mayor o igual que la hora de fin.');
+      return;
+    }
+
+    const diffMinutes = (endDateTime.getTime() - startDateTime.getTime()) / (1000 * 60);
+    if (diffMinutes < 90) {
+      this.openErrorModal('Debe haber al menos 1.5 horas (90 minutos) entre la hora de inicio y la hora de fin.');
+      return;
+    }
+
+    const dayPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s,_]+$/;
+    if (!this.dayInput || !dayPattern.test(this.dayInput)) {
+      this.openErrorModal('Por favor, ingrese los días en un formato válido (ej. "lun_mar", "miercoles").');
+      return;
+    }
+
     const scheduleDTO: ScheduleDTO = {
       days: this.dayInput,
-      schedule: `${this.startTimeInput}-${this.endTimeInput}`,
+      schedule: `${startTime}-${endTime}`,
     };
 
     console.log('CreateScheduleModal: Attempting to save schedule:', scheduleDTO);
@@ -110,15 +134,30 @@ export class CreateScheduleModal implements OnInit {
     }
   }
 
-  // Abre un modal de error
+  /**
+   * Abre un modal de error con un mensaje específico.
+   * @param message El mensaje de error a mostrar.
+   */
   openErrorModal(message: string): void {
     const modalRef = this.modalService.open(ErrorModal);
-    modalRef.componentInstance.message = message;
+    modalRef.componentInstance.errorMessage = message;
   }
 
-  // Abre un modal de éxito
+  /**
+   * Abre un modal de éxito.
+   * @param message El mensaje de éxito a mostrar.
+   */
   openSuccessModal(message: string): void {
     const modalRef = this.modalService.open(ScheduleSuccessModal);
     modalRef.componentInstance.message = message;
+  }
+
+  /**
+   * Genera la lista de horas (00-23) para el dropdown.
+   */
+  private generateHours(): void {
+    for (let i = 0; i < 24; i++) {
+      this.hours.push(i.toString().padStart(2, '0'));
+    }
   }
 }

@@ -17,9 +17,8 @@
         <div>{{erroMSG}}</div>
       }
 
-
       <form [formGroup]="editSubjectForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading && !erroMSG">
-        <div class="">
+        <div class="mb-3">
           <label for="subjectId" class="form-label">ID de Materia</label>
           <input type="text" id="subjectId" formControlName="subjectId" class="form-control" readonly>
         </div>
@@ -81,8 +80,14 @@
           <label for="maximumCapacity" class="form-label">Capacidad Máxima</label>
           <input type="number" id="maximumCapacity" formControlName="maximumCapacity" class="form-control"
                  [class.is-invalid]="editSubjectForm.get('maximumCapacity')?.invalid && editSubjectForm.get('maximumCapacity')?.touched">
-          <div *ngIf="editSubjectForm.get('maximumCapacity')?.invalid && editSubjectForm.get('maximumCapacity')?.touched" class="invalid-feedback">
-            Capacidad máxima es requerida y debe ser mayor a 0.
+          <div *ngIf="editSubjectForm.get('maximumCapacity')?.invalid" class="invalid-feedback">
+            @if (editSubjectForm.get('maximumCapacity')?.errors?.['required'] && editSubjectForm.get('maximumCapacity')?.touched) {
+              Capacidad máxima es requerida.
+            } @else if (editSubjectForm.get('maximumCapacity')?.errors?.['min'] && editSubjectForm.get('maximumCapacity')?.touched) {
+              La capacidad debe ser mayor a 0.
+            } @else if (editSubjectForm.get('maximumCapacity')?.errors?.['capacityExceedsAbility']) {
+              La capacidad máxima ({{ editSubjectForm.get('maximumCapacity')?.errors?.['capacityExceedsAbility'].actual }}) excede la capacidad del aula ({{ editSubjectForm.get('maximumCapacity')?.errors?.['capacityExceedsAbility'].max }}).
+            }
           </div>
         </div>
 

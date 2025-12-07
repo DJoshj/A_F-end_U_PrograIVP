@@ -4,25 +4,28 @@
   height: 100dvh;
 }
 
-/* Contenido principal */
+.all-content {
+  display: flex;
+  width: 100dvw;
+  height: 100dvh;
+}
+
 .main {
-  flex-grow: 1; /* Permite que el contenido principal ocupe el espacio vertical restante */
+  flex-grow: 1;
   background: #f8f8f8;
   overflow-y: auto;
-  width: 100%; 
+  width: 100%;
 }
 
-/* Área de contenido principal */
 .content-area {
-  flex-grow: 1; /* Permite que el área de contenido ocupe el espacio restante */
+  flex-grow: 1;
   display: flex;
-  flex-direction: column; 
-  position: relative; 
+  flex-direction: column;
+  position: relative;
 }
 
-/* Barra lateral */
 .side-nav {
-  width: 15%; /* Default width for side-nav */
+  width: 15%;
   height: 100%;
   background-color: #ffffff;
   border-right: 1px solid #000000;
@@ -38,7 +41,6 @@
   color: white;
 }
 
-/* Logo */
 .logo-nav {
   height: 30%;
   display: flex;
@@ -62,7 +64,6 @@
   color: #333;
 }
 
-/* Opciones del menú */
 .opciones {
   height: 50%;
   display: flex;
@@ -88,12 +89,12 @@
   overflow: hidden;
   color: white;
   font-size: 1rem;
-  background-color: #0F2366; /* Fondo predeterminado */
+  background-color: #0F2366;
   box-shadow: 0 5px 15px rgba(0,0,0,0.20);
 }
 
 .opciones button span {
-  position: relative; 
+  position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
@@ -108,7 +109,7 @@
   top: 0;
   height: 500%;
   width: 150%;
-  background: #78c7d2; /* Fondo predeterminado al pasar el ratón */
+  background: #78c7d2;
   -webkit-transition: all .5s ease-in-out;
   transition: all .5s ease-in-out;
   -webkit-transform: translateX(-98%) translateY(-25%) rotate(45deg);
@@ -116,16 +117,15 @@
 }
 
 .opciones button:hover:after,
-.opciones button.active:after { /* Aplica estado activo */
+.opciones button.active:after {
   -webkit-transform: translateX(-9%) translateY(-25%) rotate(45deg);
   transform: translateX(-9%) translateY(-25%) rotate(45deg);
 }
 
 .opciones button.active {
-  transform: scale(1.09); /* Mantiene la escala para el estado activo */
+  transform: scale(1.09);
 }
 
-/* Colores de fondo específicos para los botones */
 .opciones button:nth-child(1):after {
   background: #3454bd;
 }
@@ -135,15 +135,6 @@
 .opciones button:nth-child(3):after {
     background: #225f75;
 }
-.opciones button:nth-child(4):after {
-      
-    background: #483286;
-
-}
-.opciones button:nth-child(5):after {
-    background: #483286;
-}
-
 
 .salir {
   height: 20%;
@@ -170,27 +161,18 @@
   transform: scale(1.05);
 }
 
-/* Contenido principal */
-.main {
-  flex-grow: 1; /* Permite que el contenido principal ocupe el espacio vertical restante */
-  background: #f8f8f8;
-  overflow-y: auto; /* Changed to auto to allow scrolling if content overflows */
-}
-
-/* ----------- Adaptable ----------- */
-
 /* Adaptable para pantallas <= 1500px */
 @media (max-width: 1500px) {
   .side-nav {
-    width: 23%; /* Ajusta el ancho de la barra lateral */
+    width: 23%;
   }
 
   .logo-nav img {
-    width: 100px; /* Logo ligeramente más pequeño */
+    width: 100px;
   }
 
   .logo-nav h3 {
-    font-size: 1.3rem; /* Título ligeramente más pequeño */
+    font-size: 1.3rem;
   }
 
 .opciones{
@@ -198,9 +180,9 @@
 }
 
   .opciones button {
-    width: 50%; /* Ajusta el ancho del botón */
-    padding: 5px; /* Ajusta el relleno */
-    font-size: 0.9rem; /* Ajusta el tamaño de la fuente */
+    width: 50%;
+    padding: 5px;
+    font-size: 0.9rem;
     height: 35px;
   }
 }

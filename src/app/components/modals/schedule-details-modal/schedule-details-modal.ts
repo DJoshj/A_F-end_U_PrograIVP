@@ -1,31 +1,30 @@
-// assigned-schedule-details.ts
-// Componente para mostrar las materias y aulas asignadas a un horario específico.
-import { Component, OnInit, OnDestroy, Input } from '@angular/core'; // Import Input
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AssigenedSubjectService } from '@app/core/services/Assignedsubject-service';
 import { AssignedSchedule } from '@app/core/models/assigned-schedule.model';
 import { ErrorModal } from '@app/components/modals/error-modal/error-modal';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-assigned-schedule-details',
+  selector: 'app-schedule-details-modal',
   standalone: true,
   providers: [NgbModal, AssigenedSubjectService],
   imports: [CommonModule],
-  templateUrl: './assigned-schedule-details.html',
-  styleUrl: './assigned-schedule-details.css',
+  templateUrl: './schedule-details-modal.html',
+  styleUrl: './schedule-details-modal.css',
 })
-export class AssignedScheduleDetailsComponent implements OnInit, OnDestroy {
-  @Input() scheduleId!: number; // Make scheduleId an Input property
+export class ScheduleDetailsModal implements OnInit, OnDestroy {
+  @Input() scheduleId!: number;
   assignedSubjects: AssignedSchedule[] = [];
   isLoading: boolean = false;
   erroMSG: string = '';
-  private assignedSubjectsSubscription!: Subscription; // Renamed for clarity
+  private assignedSubjectsSubscription!: Subscription;
 
   constructor(
     private assignedSubjectService: AssigenedSubjectService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    public activeModal: NgbActiveModal
   ) {}
 
   ngOnInit(): void {
@@ -42,6 +41,10 @@ export class AssignedScheduleDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Carga las materias asignadas para un horario específico.
+   * @param scheduleId El ID del horario.
+   */
   loadAssignedSubjectsForSchedule(scheduleId: number): void {
     this.isLoading = true;
     this.erroMSG = '';
@@ -61,8 +64,19 @@ export class AssignedScheduleDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Abre un modal de error con un mensaje específico.
+   * @param message El mensaje de error a mostrar.
+   */
   openErrorModal(message: string): void {
     const modalRef = this.modalService.open(ErrorModal);
     modalRef.componentInstance.message = message;
+  }
+
+  /**
+   * Cierra el modal de detalles.
+   */
+  closeModal(): void {
+    this.activeModal.dismiss('close');
   }
 }

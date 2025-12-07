@@ -1,6 +1,4 @@
 import { Component, OnInit, signal } from '@angular/core';
-
-//angular material
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,8 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-
-//Nng Boostrap
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap'
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
@@ -18,6 +14,7 @@ import { ErrorModal } from '../modals/error-modal/error-modal';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [
     MatInputModule,
     MatCardModule,
@@ -29,7 +26,7 @@ import { ErrorModal } from '../modals/error-modal/error-modal';
   ],
   templateUrl: './login.html',
   styleUrl: './login.css',
-  providers: [NgbModal, NgbModalConfig,SuccessModal,ErrorModal]
+  providers: [NgbModal, NgbModalConfig, SuccessModal, ErrorModal]
 })
 export class Login implements OnInit {
 
@@ -41,27 +38,19 @@ export class Login implements OnInit {
     private modalService: NgbModal,
     private authService: AuthService,
     private router: Router) {
-    //modal
     config.backdrop = 'static';
     config.keyboard = false;
   }
 
-
-
   ngOnInit(): void {
-
     this.loginForm = this.formBuilder.group({
       username: this.formBuilder.control('Admin'),
       password: this.formBuilder.control('admin1234')
     });
-
   }
-
-  //login funciton
 
   /**
    * Maneja el proceso de inicio de sesión.
-   * Temporalmente desactiva el modal de éxito para ir directamente a la página de inicio.
    */
   login(): void {
     this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
@@ -73,30 +62,25 @@ export class Login implements OnInit {
             }
           },
           (reason) => {
-            // Manejar el cierre del modal si es necesario
+            console.log('Modal de éxito cerrado con razón:', reason);
           }
         );
       },
       error: (err) => {
-        console.error('Fallo de inicio de sesión', err); // Registrar el error en consola
-        this.errorMessage = err.error?.message || 'Credenciales inválidas. Por favor, intente de nuevo.'; // Mensaje de error
-        const modalRef = this.modalService.open(ErrorModal, { centered: true }); // Abrir modal de error
-        modalRef.componentInstance.errorMessage = this.errorMessage; // Pasar mensaje de error al modal
+        console.error('Fallo de inicio de sesión', err);
+        this.errorMessage = err.error?.message || 'Credenciales inválidas. Por favor, intente de nuevo.';
+        const modalRef = this.modalService.open(ErrorModal, { centered: true });
+        modalRef.componentInstance.errorMessage = this.errorMessage;
       }
     });
   }
 
-  //fin login funtion
-
-  //log out funtion
-
-  //password hide or show
-    hide = signal(true);
+  /**
+   * Controla la visibilidad de la contraseña.
+   */
+  hide = signal(true);
   clickEvent(event: MouseEvent) {
     this.hide.set(!this.hide());
     event.stopPropagation();
   }
-
-
-
 }

@@ -1,7 +1,13 @@
-<div class="modal-body">
-    <p>{{ errorMessage }}</p>
-        <h3>Error</h3>
+<!-- Encabezado del modal de error. -->
+<div class="modal-header">
+  <h4 class="modal-title">Error</h4> <!-- Título fijo para el modal de error. -->
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close('Cross click')"></button>
 </div>
+<!-- Cuerpo del modal, muestra el mensaje de error. -->
+<div class="modal-body">
+  <p>{{ errorMessage }}</p> <!-- Muestra el mensaje de error dinámico. -->
+</div>
+<!-- Pie de página del modal con botón para cerrar. -->
 <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="activeModal.close('Close click')">Cerrar</button>
+  <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')">Cerrar</button>
 </div>

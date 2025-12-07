@@ -1,1 +1,48 @@
 /* Estilos para el modal de confirmación de eliminación de materia */
+.modal-header {
+  background-color: #dc3545;
+  color: white;
+  border-bottom: none;
+}
+
+.modal-title {
+  font-weight: bold;
+}
+
+.modal-body {
+  padding: 20px;
+  color: #333;
+}
+
+.modal-footer {
+  border-top: none;
+  padding: 15px 20px;
+  background-color: #f8f9fa;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.btn-close {
+  color: white;
+  filter: invert(1);
+}

@@ -14,13 +14,8 @@
       @if (showAdminButton) {
       <button routerLink="/home/administracion"[class.active]="isRouteActive('/home/administracion')"><span><mat-icon>assignment</mat-icon>Administracion</span></button>
       }
-        @if (showAdminButton) {
-      <button routerLink="/home/administracion/schedule"[class.active]="isRouteActive('/home/administracion/schedule')"><span><mat-icon>analytics</mat-icon>Horarios</span></button>
-      }
-
       <button routerLink="/home/profile"[class.active]="isRouteActive('/home/profile')"><span><mat-icon>analytics</mat-icon>Mi Informacion</span></button>
       <button routerLink="/home/estudiantes" [class.active]="isRouteActive('/home/estudiantes')"><span><mat-icon>school</mat-icon>Estudiantes</span></button>
-      <button routerLink="#"[class.active]="isRouteActive('/home/docentes')"><span><mat-icon>work</mat-icon>Docentes</span></button>
     </div>
 
     <!-- Botón de salir -->

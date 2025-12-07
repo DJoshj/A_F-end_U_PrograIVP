@@ -1,8 +1,3 @@
-* {
-    margin: 0;
-    padding: 0;
-}
-
 .search button{
    outline: none;
    border: none;
@@ -19,15 +14,14 @@
    border-radius: 30px;
 }
 
-/* tabla */
+/* Estilos de la tabla */
 .table{
     height:90%;
     border-bottom-left-radius:10px;
     border-bottom-right-radius:10px;
 }
 
-/* responseive */
-
+/* Estilos responsivos */
 @media (max-width:1500px){
 
 mat-form-field{
