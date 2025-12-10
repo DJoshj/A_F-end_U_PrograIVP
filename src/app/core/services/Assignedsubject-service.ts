@@ -43,6 +43,14 @@ export class AssigenedSubjectService {
     return this.httpClient.put<any>(`${this.apiUrl}/update/${id}`, dto, { headers });
   }
 
+  createSubjectAssigned(dto: SubjectAssignedDTO): Observable<any> {
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    return this.httpClient.post<any>(`${this.apiUrl}/create`, dto, { headers });
+  }
+
    // Método para notificar a los suscriptores que los datos de las materias han cambiado
     notifySubjectsChanged() {
       this._subjectsChanged.next();
