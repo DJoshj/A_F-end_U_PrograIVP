@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common'; // Import CommonModule
 
@@ -10,5 +10,7 @@ import { CommonModule } from '@angular/common'; // Import CommonModule
   standalone: true // Mark as standalone
 })
 export class SuccessModal {
+  @Input() message: string = '';
+
   constructor(public activeModal: NgbActiveModal) {}
 }

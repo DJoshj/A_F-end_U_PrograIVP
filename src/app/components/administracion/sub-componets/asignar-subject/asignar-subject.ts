@@ -465,7 +465,7 @@ export class AsignarSubject implements OnInit {
         // Create mode
         this.assigenedSubjectService.createSubjectAssigned(subjectAssignedDTO).subscribe({
           next: () => {
-            this.openSuccessModal('Materia asignada creada exitosamente.');
+            this.openSuccessModal('Materia asignada exitosamente.');
             this.router.navigate(['/home/administracion/assigned-subjects']);
           },
           error: (err: any) => {
