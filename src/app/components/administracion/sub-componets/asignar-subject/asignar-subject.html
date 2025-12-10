@@ -1,7 +1,9 @@
 <div class="container mt-4">
   <div class="card">
+<div class="container mt-4">
+  <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <h2>Editar Materia Asignada</h2>
+      <h2>{{ isEditMode ? 'Editar Materia Asignada' : 'Asignar Nueva Materia' }}</h2>
       <button class="btn btn-secondary" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon> Volver
       </button>
@@ -11,96 +13,110 @@
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Cargando...</span>
         </div>
-        <p>Cargando materia...</p>
+        <p>Cargando...</p>
       </div>
       @if (erroMSG) {
         <div>{{erroMSG}}</div>
       }
 
-      <form [formGroup]="editSubjectForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading && !erroMSG">
-        <div class="mb-3">
+      <form [formGroup]="asignarSubjectForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading && !erroMSG">
+        <div class="mb-3" *ngIf="isEditMode">
           <label for="subjectId" class="form-label">ID de Materia</label>
           <input type="text" id="subjectId" formControlName="subjectId" class="form-control" readonly>
         </div>
 
-        <div class="">
+        <div class="mb-3" *ngIf="!isEditMode">
+          <label for="subjectId" class="form-label">Materia</label>
+          <select id="subjectId" formControlName="subjectId" class="form-select"
+                  [class.is-invalid]="asignarSubjectForm.get('subjectId')?.invalid && asignarSubjectForm.get('subjectId')?.touched">
+            <option [ngValue]="null" disabled>Seleccione una materia</option>
+            <option *ngFor="let subject of subjects" [ngValue]="subject.subjectId">{{ subject.subjectName }} ({{ subject.subjectCode }})</option>
+          </select>
+          <div *ngIf="asignarSubjectForm.get('subjectId')?.invalid && asignarSubjectForm.get('subjectId')?.touched" class="invalid-feedback">
+            Materia es requerida.
+          </div>
+        </div>
+
+        <div class="mb-3" *ngIf="isEditMode">
           <label for="subjectName" class="form-label">Nombre de Materia</label>
           <input type="text" id="subjectName" formControlName="subjectName" class="form-control" readonly>
         </div>
 
-        <div class="">
+        <div class="mb-3">
           <label for="teacherId" class="form-label">Docente</label>
           <select id="teacherId" formControlName="teacherId" class="form-select"
-                  [class.is-invalid]="editSubjectForm.get('teacherId')?.invalid && editSubjectForm.get('teacherId')?.touched">
+                  [class.is-invalid]="asignarSubjectForm.get('teacherId')?.invalid && asignarSubjectForm.get('teacherId')?.touched">
             <option [ngValue]="null" disabled>Seleccione un docente</option>
             <option *ngFor="let teacher of teachers" [ngValue]="teacher.teacherId">{{ teacher.names }} {{ teacher.lastName }}</option>
           </select>
-          <div *ngIf="editSubjectForm.get('teacherId')?.invalid && editSubjectForm.get('teacherId')?.touched" class="invalid-feedback">
+          <div *ngIf="asignarSubjectForm.get('teacherId')?.invalid && asignarSubjectForm.get('teacherId')?.touched" class="invalid-feedback">
             Docente es requerido.
           </div>
         </div>
 
-        <div class="">
+        <div class="mb-3">
           <label for="periodId" class="form-label">Periodo</label>
           <select id="periodId" formControlName="periodId" class="form-select"
-                  [class.is-invalid]="editSubjectForm.get('periodId')?.invalid && editSubjectForm.get('periodId')?.touched">
+                  [class.is-invalid]="asignarSubjectForm.get('periodId')?.invalid && asignarSubjectForm.get('periodId')?.touched">
             <option [ngValue]="null" disabled>Seleccione un periodo</option>
             <option *ngFor="let period of periods" [ngValue]="period.periodId">{{ period.name }} ({{ period.year }})</option>
           </select>
-          <div *ngIf="editSubjectForm.get('periodId')?.invalid && editSubjectForm.get('periodId')?.touched" class="invalid-feedback">
+          <div *ngIf="asignarSubjectForm.get('periodId')?.invalid && asignarSubjectForm.get('periodId')?.touched" class="invalid-feedback">
             Periodo es requerido.
           </div>
         </div>
 
-        <div class="">
+        <div class="mb-3">
           <label for="classroomId" class="form-label">Aula</label>
           <select id="classroomId" formControlName="classroomId" class="form-select"
-                  [class.is-invalid]="editSubjectForm.get('classroomId')?.invalid && editSubjectForm.get('classroomId')?.touched">
+                  [class.is-invalid]="asignarSubjectForm.get('classroomId')?.invalid && asignarSubjectForm.get('classroomId')?.touched">
             <option [ngValue]="null" disabled>Seleccione un aula</option>
             <option *ngFor="let classroom of classrooms" [ngValue]="classroom.classroomId">{{ classroom.name }} ({{ classroom.building }})</option>
           </select>
-          <div *ngIf="editSubjectForm.get('classroomId')?.invalid && editSubjectForm.get('classroomId')?.touched" class="invalid-feedback">
+          <div *ngIf="asignarSubjectForm.get('classroomId')?.invalid && asignarSubjectForm.get('classroomId')?.touched" class="invalid-feedback">
             Aula es requerida.
           </div>
         </div>
 
-        <div class="">
+        <div class="mb-3">
           <label for="scheduleId" class="form-label">Horario</label>
           <select id="scheduleId" formControlName="scheduleId" class="form-select"
-                  [class.is-invalid]="editSubjectForm.get('scheduleId')?.invalid && editSubjectForm.get('scheduleId')?.touched">
+                  [class.is-invalid]="asignarSubjectForm.get('scheduleId')?.invalid && asignarSubjectForm.get('scheduleId')?.touched">
             <option [ngValue]="null" disabled>Seleccione un horario</option>
             <option *ngFor="let schedule of availableSchedules" [ngValue]="schedule.scheduleId">{{ schedule.days }} {{ schedule.schedule }}</option>
           </select>
-          <div *ngIf="editSubjectForm.get('scheduleId')?.invalid && editSubjectForm.get('scheduleId')?.touched" class="invalid-feedback">
+          <div *ngIf="asignarSubjectForm.get('scheduleId')?.invalid && asignarSubjectForm.get('scheduleId')?.touched" class="invalid-feedback">
             Horario es requerido.
           </div>
         </div>
 
-        <div class="">
+        <div class="mb-3">
           <label for="maximumCapacity" class="form-label">Capacidad Máxima</label>
           <input type="number" id="maximumCapacity" formControlName="maximumCapacity" class="form-control"
-                 [class.is-invalid]="editSubjectForm.get('maximumCapacity')?.invalid && editSubjectForm.get('maximumCapacity')?.touched">
-          <div *ngIf="editSubjectForm.get('maximumCapacity')?.invalid" class="invalid-feedback">
-            @if (editSubjectForm.get('maximumCapacity')?.errors?.['required'] && editSubjectForm.get('maximumCapacity')?.touched) {
+                 [class.is-invalid]="asignarSubjectForm.get('maximumCapacity')?.invalid && asignarSubjectForm.get('maximumCapacity')?.touched">
+          <div *ngIf="asignarSubjectForm.get('maximumCapacity')?.invalid" class="invalid-feedback">
+            @if (asignarSubjectForm.get('maximumCapacity')?.errors?.['required'] && asignarSubjectForm.get('maximumCapacity')?.touched) {
               Capacidad máxima es requerida.
-            } @else if (editSubjectForm.get('maximumCapacity')?.errors?.['min'] && editSubjectForm.get('maximumCapacity')?.touched) {
+            } @else if (asignarSubjectForm.get('maximumCapacity')?.errors?.['min'] && asignarSubjectForm.get('maximumCapacity')?.touched) {
               La capacidad debe ser mayor a 0.
-            } @else if (editSubjectForm.get('maximumCapacity')?.errors?.['capacityExceedsAbility']) {
-              La capacidad máxima ({{ editSubjectForm.get('maximumCapacity')?.errors?.['capacityExceedsAbility'].actual }}) excede la capacidad del aula ({{ editSubjectForm.get('maximumCapacity')?.errors?.['capacityExceedsAbility'].max }}).
+            } @else if (asignarSubjectForm.get('maximumCapacity')?.errors?.['capacityExceedsAbility']) {
+              La capacidad máxima ({{ asignarSubjectForm.get('maximumCapacity')?.errors?.['capacityExceedsAbility'].actual }}) excede la capacidad del aula ({{ asignarSubjectForm.get('maximumCapacity')?.errors?.['capacityExceedsAbility'].max }}).
             }
           </div>
         </div>
 
-        <div class="">
+        <div class="mb-3">
           <label for="section" class="form-label">Sección</label>
           <input type="text" id="section" formControlName="section" class="form-control"
-                 [class.is-invalid]="editSubjectForm.get('section')?.invalid && editSubjectForm.get('section')?.touched">
-          <div *ngIf="editSubjectForm.get('section')?.invalid && editSubjectForm.get('section')?.touched" class="invalid-feedback">
+                 [class.is-invalid]="asignarSubjectForm.get('section')?.invalid && asignarSubjectForm.get('section')?.touched">
+          <div *ngIf="asignarSubjectForm.get('section')?.invalid && asignarSubjectForm.get('section')?.touched" class="invalid-feedback">
             Sección es requerida.
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" [disabled]="editSubjectForm.invalid">Guardar Cambios</button>
+        <button type="submit" class="btn btn-primary" [disabled]="asignarSubjectForm.invalid">
+          {{ isEditMode ? 'Guardar Cambios' : 'Asignar Materia' }}
+        </button>
       </form>
     </div>
   </div>

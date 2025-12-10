@@ -3,14 +3,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AssigenedSubjectService } from '../../../../core/services/Assignedsubject-service';
-import { SubjectAssignedDTO } from '../../../../core/models/subject.model';
+import { SubjectAssignedDTO, SubjectModel } from '../../../../core/models/subject.model';
 import { TeacherService } from '../../../../core/services/teacher-service';
 import { ScheduleService } from '../../../../core/services/schedule-service';
 import { ClassroomService } from '../../../../core/services/classroom-service';
 import { PeriodService } from '../../../../core/services/period-service';
 import { AuthService } from '../../../../core/services/auth-service';
 import { MatIconModule } from '@angular/material/icon';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { SubjectService } from '../../../../core/services/subject-service';
+import { ErrorModal } from '@app/components/modals/error-modal/error-modal';
+import { SuccessModal } from '@app/components/modals/success-modal/success-modal';
 
 @Component({
   selector: 'app-asignar-subject',
@@ -26,13 +29,15 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 })
 export class AsignarSubject implements OnInit {
   subjectAssignedId: number | null = null;
-  editSubjectForm!: FormGroup;
+  isEditMode: boolean = false;
+  asignarSubjectForm!: FormGroup;
   erroMSG: string = '';
   teachers: any[] = [];
   schedules: any[] = [];
   availableSchedules: any[] = [];
   classrooms: any[] = [];
   periods: any[] = [];
+  subjects: SubjectModel[] = []; // For subject selection in create mode
   allSubjectAssignments: any[] = [];
   isLoading = true;
 
@@ -45,11 +50,17 @@ export class AsignarSubject implements OnInit {
     private scheduleService: ScheduleService,
     private classroomService: ClassroomService,
     private periodService: PeriodService,
-    private authService: AuthService
+    private authService: AuthService,
+    private subjectService: SubjectService, // Inject SubjectService
+    private modalService: NgbModal,
+    private configM: NgbModalConfig
   ) {
-    this.editSubjectForm = this.fb.group({
-      subjectId: [{ value: '', disabled: true }, Validators.required],
-      subjectName: [{ value: '', disabled: true }, Validators.required], 
+    configM.backdrop = 'static';
+    configM.keyboard = false;
+
+    this.asignarSubjectForm = this.fb.group({
+      subjectId: ['', Validators.required], // Enabled for creation
+      subjectName: [{ value: '', disabled: true }], // Only for display in edit mode
       teacherId: ['', Validators.required],
       periodId: ['', Validators.required],
       scheduleId: ['', Validators.required],
@@ -68,20 +79,25 @@ export class AsignarSubject implements OnInit {
     this.route.paramMap.subscribe(params => {
       const idParam = params.get('id');
       this.subjectAssignedId = idParam ? +idParam : null;
-      if (this.subjectAssignedId) {
-        this.loadSubjectAssigned(this.subjectAssignedId);
-        this.loadDropdownData();
-        this.loadAllSubjectAssignments();
+      this.isEditMode = !!this.subjectAssignedId;
+
+      this.loadDropdownData();
+      this.loadAllSubjectAssignments();
+
+      if (this.isEditMode) {
+        this.asignarSubjectForm.get('subjectId')?.disable(); // Disable subject selection in edit mode
+        this.loadSubjectAssigned(this.subjectAssignedId!);
       } else {
-        this.erroMSG = 'No se proporcionó ID de materia asignada.';
+        this.asignarSubjectForm.get('subjectName')?.disable(); // Ensure subjectName is disabled in create mode
+        this.loadSubjects(); // Load subjects for selection in create mode
         this.isLoading = false;
       }
     });
 
-    this.editSubjectForm.get('periodId')?.valueChanges.subscribe(() => this.filterSchedules());
-    this.editSubjectForm.get('classroomId')?.valueChanges.subscribe(() => {
+    this.asignarSubjectForm.get('periodId')?.valueChanges.subscribe(() => this.filterSchedules());
+    this.asignarSubjectForm.get('classroomId')?.valueChanges.subscribe(() => {
       this.filterSchedules();
-      this.editSubjectForm.get('maximumCapacity')?.updateValueAndValidity();
+      this.asignarSubjectForm.get('maximumCapacity')?.updateValueAndValidity();
     });
   }
 
@@ -90,7 +106,7 @@ export class AsignarSubject implements OnInit {
    */
   maximumCapacityValidator(control: { value: number }): { [key: string]: any } | null {
     const capacity = control.value;
-    const classroomId = this.editSubjectForm?.get('classroomId')?.value;
+    const classroomId = this.asignarSubjectForm?.get('classroomId')?.value;
 
     if (!capacity || !classroomId || !this.classrooms.length) {
       return null;
@@ -112,7 +128,7 @@ export class AsignarSubject implements OnInit {
     this.isLoading = true;
     this.assigenedSubjectService.getSubjectAssignedById(id).subscribe({
       next: (data: any) => {
-        this.editSubjectForm.patchValue({
+        this.asignarSubjectForm.patchValue({
           subjectId: data.subjectId,
           subjectName: data.subjectName,
           teacherId: data.teacherId,
@@ -132,6 +148,22 @@ export class AsignarSubject implements OnInit {
         if (err.status == 401 || err.status === 403) {
           this.authService.logout();
         }
+        this.openErrorModal(this.erroMSG);
+      }
+    });
+  }
+
+  /**
+   * Carga todas las materias disponibles para la selección en modo creación.
+   */
+  loadSubjects(): void {
+    this.subjectService.getAllSubject().subscribe({
+      next: (data: SubjectModel[]) => {
+        this.subjects = data;
+      },
+      error: (err: any) => {
+        console.error('Error al cargar materias:', err);
+        this.openErrorModal('Error al cargar las materias disponibles.');
       }
     });
   }
@@ -142,7 +174,10 @@ export class AsignarSubject implements OnInit {
   loadDropdownData(): void {
     this.teacherService.getAllTeachers().subscribe({
       next: (data: any) => this.teachers = data,
-      error: (err: any) => console.error('Error al cargar profesores:', err)
+      error: (err: any) => {
+        console.error('Error al cargar profesores:', err);
+        this.openErrorModal('Error al cargar los profesores.');
+      }
     });
 
     this.scheduleService.getAllSchedules().subscribe({
@@ -150,17 +185,26 @@ export class AsignarSubject implements OnInit {
         this.schedules = data;
         this.filterSchedules();
       },
-      error: (err: any) => console.error('Error al cargar horarios:', err)
+      error: (err: any) => {
+        console.error('Error al cargar horarios:', err);
+        this.openErrorModal('Error al cargar los horarios.');
+      }
     });
 
     this.classroomService.getAllClassrooms().subscribe({
       next: (data: any) => this.classrooms = data,
-      error: (err: any) => console.error('Error al cargar aulas:', err)
+      error: (err: any) => {
+        console.error('Error al cargar aulas:', err);
+        this.openErrorModal('Error al cargar las aulas.');
+      }
     });
 
     this.periodService.getAllPeriods().subscribe({
       next: (data: any) => this.periods = data,
-      error: (err: any) => console.error('Error al cargar periodos:', err)
+      error: (err: any) => {
+        console.error('Error al cargar periodos:', err);
+        this.openErrorModal('Error al cargar los periodos.');
+      }
     });
   }
 
@@ -173,7 +217,10 @@ export class AsignarSubject implements OnInit {
         this.allSubjectAssignments = data;
         this.filterSchedules();
       },
-      error: (err: any) => console.error('Error al cargar todas las asignaciones de materias:', err)
+      error: (err: any) => {
+        console.error('Error al cargar todas las asignaciones de materias:', err);
+        this.openErrorModal('Error al cargar todas las asignaciones de materias para validación.');
+      }
     });
   }
 
@@ -183,14 +230,14 @@ export class AsignarSubject implements OnInit {
    * en el mismo período y aula (excluyendo la materia que se está editando).
    */
   filterSchedules(): void {
-    const currentPeriodId = this.editSubjectForm.get('periodId')?.value;
-    const currentClassroomId = this.editSubjectForm.get('classroomId')?.value;
-    const currentScheduleId = this.editSubjectForm.get('scheduleId')?.value;
+    const currentPeriodId = this.asignarSubjectForm.get('periodId')?.value;
+    const currentClassroomId = this.asignarSubjectForm.get('classroomId')?.value;
+    const currentScheduleId = this.asignarSubjectForm.get('scheduleId')?.value;
 
     if (currentPeriodId && currentClassroomId && this.schedules.length > 0 && this.allSubjectAssignments.length > 0) {
       this.availableSchedules = this.schedules.filter(schedule => {
         const isOccupied = this.allSubjectAssignments.some(assignment =>
-          assignment.subjectAssignedId !== this.subjectAssignedId &&
+          assignment.subjectAssignedId !== this.subjectAssignedId && // Exclude current subject in edit mode
           assignment.classroomId === currentClassroomId &&
           assignment.scheduleId === schedule.scheduleId &&
           assignment.periodId === currentPeriodId
@@ -198,8 +245,9 @@ export class AsignarSubject implements OnInit {
         return !isOccupied;
       });
 
+      // If the currently selected schedule is no longer available, clear it
       if (currentScheduleId && !this.availableSchedules.some(s => s.scheduleId === currentScheduleId)) {
-        this.editSubjectForm.get('scheduleId')?.setValue(null);
+        this.asignarSubjectForm.get('scheduleId')?.setValue(null);
       }
     } else {
       this.availableSchedules = [...this.schedules];
@@ -207,15 +255,16 @@ export class AsignarSubject implements OnInit {
   }
 
   /**
-   * Maneja el envío del formulario para actualizar la materia asignada.
+   * Maneja el envío del formulario para crear o actualizar la materia asignada.
    */
   onSubmit(): void {
     this.erroMSG = '';
-    if (this.editSubjectForm.valid && this.subjectAssignedId) {
-      const formValues = this.editSubjectForm.getRawValue();
+    if (this.asignarSubjectForm.valid) {
+      const formValues = this.asignarSubjectForm.getRawValue();
 
+      // Common validations for both create and update
       const classroomScheduleConflict = this.allSubjectAssignments.some(assignment =>
-        assignment.subjectAssignedId !== this.subjectAssignedId &&
+        (this.isEditMode ? assignment.subjectAssignedId !== this.subjectAssignedId : true) && // Exclude current subject in edit mode
         assignment.classroomId === formValues.classroomId &&
         assignment.scheduleId === formValues.scheduleId &&
         assignment.periodId === formValues.periodId
@@ -223,11 +272,12 @@ export class AsignarSubject implements OnInit {
 
       if (classroomScheduleConflict) {
         this.erroMSG = 'El horario seleccionado ya está ocupado para esta aula en este período.';
+        this.openErrorModal(this.erroMSG);
         return;
       }
 
       const teacherConflict = this.allSubjectAssignments.some(assignment =>
-        assignment.subjectAssignedId !== this.subjectAssignedId &&
+        (this.isEditMode ? assignment.subjectAssignedId !== this.subjectAssignedId : true) && // Exclude current subject in edit mode
         assignment.teacherId === formValues.teacherId &&
         assignment.scheduleId === formValues.scheduleId &&
         assignment.periodId === formValues.periodId
@@ -235,10 +285,11 @@ export class AsignarSubject implements OnInit {
 
       if (teacherConflict) {
         this.erroMSG = 'El docente seleccionado ya está asignado a otra materia en este horario y período.';
+        this.openErrorModal(this.erroMSG);
         return;
       }
 
-      const updatedSubject: SubjectAssignedDTO = {
+      const subjectAssignedDTO: SubjectAssignedDTO = {
         subjectId: formValues.subjectId,
         teacherId: formValues.teacherId,
         periodId: formValues.periodId,
@@ -248,27 +299,70 @@ export class AsignarSubject implements OnInit {
         section: formValues.section,
       };
 
-      console.log('Payload sent to backend:', updatedSubject);
+      console.log('Payload sent to backend:', subjectAssignedDTO);
 
-      this.assigenedSubjectService.updateSubjectAssigned(this.subjectAssignedId, updatedSubject).subscribe({
-        next: () => {
-          this.router.navigate(['/home/administracion/assigned-subjects']);
-        },
-        error: (err: any) => {
-          if (err.error && typeof err.error === 'string') {
-            this.erroMSG = err.error;
-          } else {
-            this.erroMSG = 'Error al actualizar la materia asignada. Por favor, intente de nuevo.';
+      if (this.isEditMode && this.subjectAssignedId) {
+        this.assigenedSubjectService.updateSubjectAssigned(this.subjectAssignedId, subjectAssignedDTO).subscribe({
+          next: () => {
+            this.openSuccessModal('Materia asignada actualizada exitosamente.');
+            this.router.navigate(['/home/administracion/assigned-subjects']);
+          },
+          error: (err: any) => {
+            if (err.error && typeof err.error === 'string') {
+              this.erroMSG = err.error;
+            } else {
+              this.erroMSG = 'Error al actualizar la materia asignada. Por favor, intente de nuevo.';
+            }
+            console.error('Error al actualizar la materia asignada:', err);
+            if (err.status == 401 || err.status === 403) {
+              this.authService.logout();
+            }
+            this.openErrorModal(this.erroMSG);
           }
-          console.error('Error al actualizar la materia asignada:', err);
-          if (err.status == 401 || err.status === 403) {
-            this.authService.logout();
+        });
+      } else {
+        // Create mode
+        this.assigenedSubjectService.createSubjectAssigned(subjectAssignedDTO).subscribe({
+          next: () => {
+            this.openSuccessModal('Materia asignada creada exitosamente.');
+            this.router.navigate(['/home/administracion/assigned-subjects']);
+          },
+          error: (err: any) => {
+            if (err.error && typeof err.error === 'string') {
+              this.erroMSG = err.error;
+            } else {
+              this.erroMSG = 'Error al crear la materia asignada. Por favor, intente de nuevo.';
+            }
+            console.error('Error al crear la materia asignada:', err);
+            if (err.status == 401 || err.status === 403) {
+              this.authService.logout();
+            }
+            this.openErrorModal(this.erroMSG);
           }
-        }
-      });
+        });
+      }
     } else {
-      this.erroMSG = 'Por favor, complete todos los campos requeridos.';
+      this.erroMSG = 'Por favor, complete todos los campos requeridos y corrija los errores.';
+      this.openErrorModal(this.erroMSG);
     }
+  }
+
+  /**
+   * Abre un modal de error.
+   * @param message El mensaje de error a mostrar.
+   */
+  openErrorModal(message: string): void {
+    const modalRef = this.modalService.open(ErrorModal);
+    modalRef.componentInstance.message = message;
+  }
+
+  /**
+   * Abre un modal de éxito.
+   * @param message El mensaje de éxito a mostrar.
+   */
+  openSuccessModal(message: string): void {
+    const modalRef = this.modalService.open(SuccessModal);
+    modalRef.componentInstance.message = message;
   }
 
   /**

@@ -30,7 +30,13 @@ export const routes: Routes = [
                         { path: 'editaUsuario/:username', component: EditarUsuario },
                         { path: 'assigned-subjects', component: AssignedSubjects },
                         {
-                          path: 'asignarSubject/:id',
+                          path: 'asignarSubject', // Route for creating a new subject assignment
+                          component: AsignarSubject,
+                          canActivate: [AuthGuardGuard, AuthorizationGuard],
+                          data: { roles: [UserRole.ADMIN] }
+                        },
+                        {
+                          path: 'asignarSubject/:id', // Route for editing an existing subject assignment
                           component: AsignarSubject,
                           canActivate: [AuthGuardGuard, AuthorizationGuard],
                           data: { roles: [UserRole.ADMIN] }

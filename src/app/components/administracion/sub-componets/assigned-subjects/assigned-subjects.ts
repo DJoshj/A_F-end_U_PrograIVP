@@ -39,7 +39,7 @@ export class AssignedSubjects implements OnInit, OnDestroy {
   constructor(
     private assigenedSubjectService: AssigenedSubjectService,
     private authService: AuthService,
-    private router: Router,
+    public router: Router, // Changed to public
     private modalService: NgbModal,
     private configM: NgbModalConfig
   ) {
