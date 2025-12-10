@@ -33,11 +33,14 @@ export class AsignarSubject implements OnInit {
   asignarSubjectForm!: FormGroup;
   erroMSG: string = '';
   teachers: any[] = [];
+  availableTeachers: any[] = []; // Docentes disponibles según el horario y período
   schedules: any[] = [];
   availableSchedules: any[] = [];
   classrooms: any[] = [];
+  availableClassrooms: any[] = []; // Aulas disponibles según el horario y período
   periods: any[] = [];
-  subjects: SubjectModel[] = []; // For subject selection in create mode
+  subjects: SubjectModel[] = []; // Para la selección de materias en modo creación
+  unassignedSubjects: SubjectModel[] = []; // Materias que aún no han sido asignadas
   allSubjectAssignments: any[] = [];
   isLoading = true;
 
@@ -59,12 +62,12 @@ export class AsignarSubject implements OnInit {
     configM.keyboard = false;
 
     this.asignarSubjectForm = this.fb.group({
-      subjectId: ['', Validators.required], // Enabled for creation
-      subjectName: [{ value: '', disabled: true }], // Only for display in edit mode
-      teacherId: ['', Validators.required],
+      subjectId: ['', Validators.required], // Habilitado para creación
+      subjectName: [{ value: '', disabled: true }], // Solo para visualización en modo edición o después de seleccionar
+      teacherId: [{ value: '', disabled: true }, Validators.required], // Deshabilitado inicialmente
       periodId: ['', Validators.required],
-      scheduleId: ['', Validators.required],
-      classroomId: ['', Validators.required],
+      scheduleId: [{ value: '', disabled: true }, Validators.required], // Deshabilitado inicialmente
+      classroomId: [{ value: '', disabled: true }, Validators.required], // Deshabilitado inicialmente
       maximumCapacity: ['', [Validators.required, Validators.min(1), this.maximumCapacityValidator.bind(this)]],
       section: ['', Validators.required],
     });
@@ -85,19 +88,62 @@ export class AsignarSubject implements OnInit {
       this.loadAllSubjectAssignments();
 
       if (this.isEditMode) {
-        this.asignarSubjectForm.get('subjectId')?.disable(); // Disable subject selection in edit mode
+        this.asignarSubjectForm.get('subjectId')?.disable(); // Deshabilitar selección de materia en modo edición
         this.loadSubjectAssigned(this.subjectAssignedId!);
       } else {
-        this.asignarSubjectForm.get('subjectName')?.disable(); // Ensure subjectName is disabled in create mode
-        this.loadSubjects(); // Load subjects for selection in create mode
+        this.asignarSubjectForm.get('subjectName')?.disable(); // Asegurar que subjectName esté deshabilitado en modo creación
+        this.loadSubjects(); // Cargar materias para selección en modo creación
         this.isLoading = false;
       }
     });
 
-    this.asignarSubjectForm.get('periodId')?.valueChanges.subscribe(() => this.filterSchedules());
+    // Suscripciones para la lógica de filtrado y habilitación/deshabilitación
+    this.asignarSubjectForm.get('periodId')?.valueChanges.subscribe(periodId => {
+      this.asignarSubjectForm.get('scheduleId')?.setValue(null); // Limpiar horario al cambiar periodo
+      this.asignarSubjectForm.get('classroomId')?.setValue(null); // Limpiar aula al cambiar periodo
+      this.asignarSubjectForm.get('teacherId')?.setValue(null); // Limpiar docente al cambiar periodo
+
+      if (periodId) {
+        this.asignarSubjectForm.get('scheduleId')?.enable();
+        this.filterSchedules();
+      } else {
+        this.asignarSubjectForm.get('scheduleId')?.disable();
+        this.asignarSubjectForm.get('classroomId')?.disable();
+        this.asignarSubjectForm.get('teacherId')?.disable();
+        this.availableSchedules = [];
+        this.availableClassrooms = [];
+        this.availableTeachers = [];
+      }
+    });
+
+    this.asignarSubjectForm.get('scheduleId')?.valueChanges.subscribe(scheduleId => {
+      this.asignarSubjectForm.get('classroomId')?.setValue(null); // Limpiar aula al cambiar horario
+      this.asignarSubjectForm.get('teacherId')?.setValue(null); // Limpiar docente al cambiar horario
+
+      if (scheduleId) {
+        this.asignarSubjectForm.get('classroomId')?.enable();
+        this.asignarSubjectForm.get('teacherId')?.enable();
+        this.filterClassrooms();
+        this.filterTeachers();
+      } else {
+        this.asignarSubjectForm.get('classroomId')?.disable();
+        this.asignarSubjectForm.get('teacherId')?.disable();
+        this.availableClassrooms = [];
+        this.availableTeachers = [];
+      }
+    });
+
     this.asignarSubjectForm.get('classroomId')?.valueChanges.subscribe(() => {
-      this.filterSchedules();
       this.asignarSubjectForm.get('maximumCapacity')?.updateValueAndValidity();
+    });
+
+    this.asignarSubjectForm.get('subjectId')?.valueChanges.subscribe(subjectId => {
+      if (!this.isEditMode && subjectId) {
+        const selectedSubject = this.subjects.find(s => s.subjectId === subjectId);
+        if (selectedSubject) {
+          this.asignarSubjectForm.get('subjectName')?.setValue(selectedSubject.subjectName);
+        }
+      }
     });
   }
 
@@ -138,8 +184,16 @@ export class AsignarSubject implements OnInit {
           maximumCapacity: data.maximumCapacity,
           section: data.section,
         });
+        // En modo edición, habilitar los campos relevantes después de cargar los datos
+        this.asignarSubjectForm.get('scheduleId')?.enable();
+        this.asignarSubjectForm.get('classroomId')?.enable();
+        this.asignarSubjectForm.get('teacherId')?.enable();
+
         this.isLoading = false;
+        // Volver a filtrar para asegurar que los dropdowns muestren las opciones correctas
         this.filterSchedules();
+        this.filterClassrooms();
+        this.filterTeachers();
       },
       error: (err: any) => {
         this.erroMSG = 'Error al cargar la materia asignada: ' + err.message;
@@ -156,16 +210,32 @@ export class AsignarSubject implements OnInit {
   /**
    * Carga todas las materias disponibles para la selección en modo creación.
    */
+  /**
+   * Carga todas las materias disponibles para la selección en modo creación y las filtra.
+   */
   loadSubjects(): void {
     this.subjectService.getAllSubject().subscribe({
       next: (data: SubjectModel[]) => {
         this.subjects = data;
+        this.filterUnassignedSubjects(); // Filtrar materias no asignadas después de cargar
       },
       error: (err: any) => {
         console.error('Error al cargar materias:', err);
         this.openErrorModal('Error al cargar las materias disponibles.');
       }
     });
+  }
+
+  /**
+   * Filtra las materias para mostrar solo aquellas que no han sido asignadas.
+   */
+  filterUnassignedSubjects(): void {
+    if (this.subjects.length > 0 && this.allSubjectAssignments.length > 0) {
+      const assignedSubjectIds = new Set(this.allSubjectAssignments.map(assignment => assignment.subjectId));
+      this.unassignedSubjects = this.subjects.filter(subject => !assignedSubjectIds.has(subject.subjectId));
+    } else {
+      this.unassignedSubjects = [...this.subjects]; // Si no hay asignaciones, todas están disponibles
+    }
   }
 
   /**
@@ -216,6 +286,9 @@ export class AsignarSubject implements OnInit {
       next: (data: any) => {
         this.allSubjectAssignments = data;
         this.filterSchedules();
+        this.filterUnassignedSubjects(); // También filtrar materias no asignadas aquí
+        this.filterClassrooms(); // Filtrar aulas al cargar todas las asignaciones
+        this.filterTeachers(); // Filtrar docentes al cargar todas las asignaciones
       },
       error: (err: any) => {
         console.error('Error al cargar todas las asignaciones de materias:', err);
@@ -231,26 +304,89 @@ export class AsignarSubject implements OnInit {
    */
   filterSchedules(): void {
     const currentPeriodId = this.asignarSubjectForm.get('periodId')?.value;
-    const currentClassroomId = this.asignarSubjectForm.get('classroomId')?.value;
-    const currentScheduleId = this.asignarSubjectForm.get('scheduleId')?.value;
+    const currentScheduleId = this.asignarSubjectForm.get('scheduleId')?.value; // Solo necesitamos el scheduleId para filtrar horarios
 
-    if (currentPeriodId && currentClassroomId && this.schedules.length > 0 && this.allSubjectAssignments.length > 0) {
+    if (currentPeriodId && this.schedules.length > 0 && this.allSubjectAssignments.length > 0) {
       this.availableSchedules = this.schedules.filter(schedule => {
+        // Un horario está disponible si no hay ninguna asignación existente
+        // con el mismo periodo y horario, independientemente del aula o docente.
+        // Esto es para asegurar que el horario en sí no esté "reservado" de alguna manera.
+        // Sin embargo, el requisito es que el horario se seleccione primero,
+        // y luego se filtren aulas y docentes.
+        // Por lo tanto, aquí solo filtramos por periodo si es necesario,
+        // pero la lógica principal de disponibilidad de horario se manejará
+        // al filtrar aulas y docentes.
+        // Por ahora, simplemente filtramos por periodo si hay alguna lógica de negocio que lo requiera.
+        // Si no, todos los horarios son "disponibles" para ser seleccionados inicialmente con un periodo.
+        return true; // Todos los horarios son potencialmente disponibles para un periodo
+      });
+
+      // Si el horario actualmente seleccionado ya no es válido para el periodo, limpiarlo
+      if (currentScheduleId && !this.availableSchedules.some(s => s.scheduleId === currentScheduleId)) {
+        this.asignarSubjectForm.get('scheduleId')?.setValue(null);
+      }
+    } else {
+      this.availableSchedules = [...this.schedules]; // Mostrar todos los horarios si no hay periodo seleccionado
+    }
+  }
+
+  /**
+   * Filtra las aulas disponibles basándose en el período y horario seleccionados.
+   * Un aula no estará disponible si ya está asignada a otra materia
+   * en el mismo período y horario (excluyendo la materia que se está editando).
+   */
+  filterClassrooms(): void {
+    const currentPeriodId = this.asignarSubjectForm.get('periodId')?.value;
+    const currentScheduleId = this.asignarSubjectForm.get('scheduleId')?.value;
+    const currentClassroomId = this.asignarSubjectForm.get('classroomId')?.value;
+
+    if (currentPeriodId && currentScheduleId && this.classrooms.length > 0 && this.allSubjectAssignments.length > 0) {
+      this.availableClassrooms = this.classrooms.filter(classroom => {
         const isOccupied = this.allSubjectAssignments.some(assignment =>
-          assignment.subjectAssignedId !== this.subjectAssignedId && // Exclude current subject in edit mode
-          assignment.classroomId === currentClassroomId &&
-          assignment.scheduleId === schedule.scheduleId &&
+          assignment.subjectAssignedId !== this.subjectAssignedId && // Excluir la materia actual en modo edición
+          assignment.classroomId === classroom.classroomId &&
+          assignment.scheduleId === currentScheduleId &&
           assignment.periodId === currentPeriodId
         );
         return !isOccupied;
       });
 
-      // If the currently selected schedule is no longer available, clear it
-      if (currentScheduleId && !this.availableSchedules.some(s => s.scheduleId === currentScheduleId)) {
-        this.asignarSubjectForm.get('scheduleId')?.setValue(null);
+      // Si el aula actualmente seleccionada ya no está disponible, limpiarla
+      if (currentClassroomId && !this.availableClassrooms.some(c => c.classroomId === currentClassroomId)) {
+        this.asignarSubjectForm.get('classroomId')?.setValue(null);
       }
     } else {
-      this.availableSchedules = [...this.schedules];
+      this.availableClassrooms = [...this.classrooms]; // Mostrar todas las aulas si no hay periodo/horario seleccionado
+    }
+  }
+
+  /**
+   * Filtra los docentes disponibles basándose en el período y horario seleccionados.
+   * Un docente no estará disponible si ya está asignado a otra materia
+   * en el mismo período y horario (excluyendo la materia que se está editando).
+   */
+  filterTeachers(): void {
+    const currentPeriodId = this.asignarSubjectForm.get('periodId')?.value;
+    const currentScheduleId = this.asignarSubjectForm.get('scheduleId')?.value;
+    const currentTeacherId = this.asignarSubjectForm.get('teacherId')?.value;
+
+    if (currentPeriodId && currentScheduleId && this.teachers.length > 0 && this.allSubjectAssignments.length > 0) {
+      this.availableTeachers = this.teachers.filter(teacher => {
+        const isOccupied = this.allSubjectAssignments.some(assignment =>
+          assignment.subjectAssignedId !== this.subjectAssignedId && // Excluir la materia actual en modo edición
+          assignment.teacherId === teacher.teacherId &&
+          assignment.scheduleId === currentScheduleId &&
+          assignment.periodId === currentPeriodId
+        );
+        return !isOccupied;
+      });
+
+      // Si el docente actualmente seleccionado ya no está disponible, limpiarlo
+      if (currentTeacherId && !this.availableTeachers.some(t => t.teacherId === currentTeacherId)) {
+        this.asignarSubjectForm.get('teacherId')?.setValue(null);
+      }
+    } else {
+      this.availableTeachers = [...this.teachers]; // Mostrar todos los docentes si no hay periodo/horario seleccionado
     }
   }
 
@@ -262,22 +398,27 @@ export class AsignarSubject implements OnInit {
     if (this.asignarSubjectForm.valid) {
       const formValues = this.asignarSubjectForm.getRawValue();
 
-      // Common validations for both create and update
+      // Validaciones comunes para creación y actualización
+      // Las validaciones de conflicto de aula y docente ya están implícitas en los filtros de los dropdowns.
+      // Sin embargo, se mantienen aquí como una capa de seguridad adicional en el backend.
+      // Si el usuario logra seleccionar un aula o docente no disponible (por manipulación del DOM, por ejemplo),
+      // estas validaciones lo atraparán.
+
       const classroomScheduleConflict = this.allSubjectAssignments.some(assignment =>
-        (this.isEditMode ? assignment.subjectAssignedId !== this.subjectAssignedId : true) && // Exclude current subject in edit mode
+        (this.isEditMode ? assignment.subjectAssignedId !== this.subjectAssignedId : true) && // Excluir la materia actual en modo edición
         assignment.classroomId === formValues.classroomId &&
         assignment.scheduleId === formValues.scheduleId &&
         assignment.periodId === formValues.periodId
       );
 
       if (classroomScheduleConflict) {
-        this.erroMSG = 'El horario seleccionado ya está ocupado para esta aula en este período.';
+        this.erroMSG = 'El aula seleccionada ya está ocupada para este horario en este período.';
         this.openErrorModal(this.erroMSG);
         return;
       }
 
       const teacherConflict = this.allSubjectAssignments.some(assignment =>
-        (this.isEditMode ? assignment.subjectAssignedId !== this.subjectAssignedId : true) && // Exclude current subject in edit mode
+        (this.isEditMode ? assignment.subjectAssignedId !== this.subjectAssignedId : true) && // Excluir la materia actual en modo edición
         assignment.teacherId === formValues.teacherId &&
         assignment.scheduleId === formValues.scheduleId &&
         assignment.periodId === formValues.periodId

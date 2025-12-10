@@ -30,14 +30,14 @@
           <select id="subjectId" formControlName="subjectId" class="form-select"
                   [class.is-invalid]="asignarSubjectForm.get('subjectId')?.invalid && asignarSubjectForm.get('subjectId')?.touched">
             <option [ngValue]="null" disabled>Seleccione una materia</option>
-            <option *ngFor="let subject of subjects" [ngValue]="subject.subjectId">{{ subject.subjectName }} ({{ subject.subjectCode }})</option>
+            <option *ngFor="let subject of unassignedSubjects" [ngValue]="subject.subjectId">{{ subject.subjectName }} ({{ subject.subjectCode }})</option>
           </select>
           <div *ngIf="asignarSubjectForm.get('subjectId')?.invalid && asignarSubjectForm.get('subjectId')?.touched" class="invalid-feedback">
             Materia es requerida.
           </div>
         </div>
 
-        <div class="mb-3" *ngIf="isEditMode">
+        <div class="mb-3">
           <label for="subjectName" class="form-label">Nombre de Materia</label>
           <input type="text" id="subjectName" formControlName="subjectName" class="form-control" readonly>
         </div>
@@ -45,9 +45,10 @@
         <div class="mb-3">
           <label for="teacherId" class="form-label">Docente</label>
           <select id="teacherId" formControlName="teacherId" class="form-select"
-                  [class.is-invalid]="asignarSubjectForm.get('teacherId')?.invalid && asignarSubjectForm.get('teacherId')?.touched">
+                  [class.is-invalid]="asignarSubjectForm.get('teacherId')?.invalid && asignarSubjectForm.get('teacherId')?.touched"
+                  [disabled]="!!asignarSubjectForm.get('teacherId')?.disabled">
             <option [ngValue]="null" disabled>Seleccione un docente</option>
-            <option *ngFor="let teacher of teachers" [ngValue]="teacher.teacherId">{{ teacher.names }} {{ teacher.lastName }}</option>
+            <option *ngFor="let teacher of availableTeachers" [ngValue]="teacher.teacherId">{{ teacher.names }} {{ teacher.lastName }}</option>
           </select>
           <div *ngIf="asignarSubjectForm.get('teacherId')?.invalid && asignarSubjectForm.get('teacherId')?.touched" class="invalid-feedback">
             Docente es requerido.
@@ -67,26 +68,40 @@
         </div>
 
         <div class="mb-3">
-          <label for="classroomId" class="form-label">Aula</label>
-          <select id="classroomId" formControlName="classroomId" class="form-select"
-                  [class.is-invalid]="asignarSubjectForm.get('classroomId')?.invalid && asignarSubjectForm.get('classroomId')?.touched">
-            <option [ngValue]="null" disabled>Seleccione un aula</option>
-            <option *ngFor="let classroom of classrooms" [ngValue]="classroom.classroomId">{{ classroom.name }} ({{ classroom.building }})</option>
+          <label for="periodId" class="form-label">Periodo</label>
+          <select id="periodId" formControlName="periodId" class="form-select"
+                  [class.is-invalid]="asignarSubjectForm.get('periodId')?.invalid && asignarSubjectForm.get('periodId')?.touched">
+            <option [ngValue]="null" disabled>Seleccione un periodo</option>
+            <option *ngFor="let period of periods" [ngValue]="period.periodId">{{ period.name }} ({{ period.year }})</option>
           </select>
-          <div *ngIf="asignarSubjectForm.get('classroomId')?.invalid && asignarSubjectForm.get('classroomId')?.touched" class="invalid-feedback">
-            Aula es requerida.
+          <div *ngIf="asignarSubjectForm.get('periodId')?.invalid && asignarSubjectForm.get('periodId')?.touched" class="invalid-feedback">
+            Periodo es requerido.
           </div>
         </div>
 
         <div class="mb-3">
           <label for="scheduleId" class="form-label">Horario</label>
           <select id="scheduleId" formControlName="scheduleId" class="form-select"
-                  [class.is-invalid]="asignarSubjectForm.get('scheduleId')?.invalid && asignarSubjectForm.get('scheduleId')?.touched">
+                  [class.is-invalid]="asignarSubjectForm.get('scheduleId')?.invalid && asignarSubjectForm.get('scheduleId')?.touched"
+                  [disabled]="!!asignarSubjectForm.get('scheduleId')?.disabled">
             <option [ngValue]="null" disabled>Seleccione un horario</option>
             <option *ngFor="let schedule of availableSchedules" [ngValue]="schedule.scheduleId">{{ schedule.days }} {{ schedule.schedule }}</option>
           </select>
           <div *ngIf="asignarSubjectForm.get('scheduleId')?.invalid && asignarSubjectForm.get('scheduleId')?.touched" class="invalid-feedback">
             Horario es requerido.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="classroomId" class="form-label">Aula</label>
+          <select id="classroomId" formControlName="classroomId" class="form-select"
+                  [class.is-invalid]="asignarSubjectForm.get('classroomId')?.invalid && asignarSubjectForm.get('classroomId')?.touched"
+                  [disabled]="!!asignarSubjectForm.get('classroomId')?.disabled">
+            <option [ngValue]="null" disabled>Seleccione un aula</option>
+            <option *ngFor="let classroom of availableClassrooms" [ngValue]="classroom.classroomId">{{ classroom.name }} ({{ classroom.building }})</option>
+          </select>
+          <div *ngIf="asignarSubjectForm.get('classroomId')?.invalid && asignarSubjectForm.get('classroomId')?.touched" class="invalid-feedback">
+            Aula es requerida.
           </div>
         </div>
 
